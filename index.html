@@ -559,10 +559,12 @@ const PLANS={
 };
 
 const PAYPAL={
- weekly:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=REPLACE_WEEKLY_PLAN_ID',
+ weekly:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=PUT_WEEKLY_PLAN_ID',
  monthly:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-5V8756691F1768234NIC446A',
- yearly:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=REPLACE_YEARLY_PLAN_ID',
+ yearly:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=PUT_YEARLY_PLAN_ID'
 };
+
+let isPro=false,selPlanId=null;
 
 // ── STATE ─────────────────────────────────────────────────
 let lang='en',goal='bulking',macros=null,eaten=[],isPro=false,selPlanId=null,bIngs=[],savedMeals=[],fCat='all',rCat='all';
