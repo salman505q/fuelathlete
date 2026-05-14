@@ -1,666 +1,771 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>FuelAthlete ⚡</title>
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0284c7" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="FuelAthlete" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg:#0a0f1e;--surface:#111827;--surface2:#0d1b3e;--border:#1e3a5f;
-      --accent:#38bdf8;--accent2:#0284c7;--text:#e2e8f0;--muted:#64748b;
-      --red:#ef4444;--yellow:#f59e0b;--green:#10b981;--purple:#a78bfa;
-      --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
-    }
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    body{background:var(--bg);color:var(--text);font-family:'Cairo','Inter',sans-serif;min-height:100dvh;overflow-x:hidden}
-    .rtl{direction:rtl}.ltr{direction:ltr}
-
-    /* LANG SWITCHER */
-    .lang-bar{display:flex;justify-content:center;gap:6px;padding:8px 12px;background:#0d1b3e;border-bottom:1px solid var(--border)}
-    .lang-btn{background:transparent;border:1px solid var(--border);border-radius:20px;padding:4px 12px;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s}
-    .lang-btn.active{background:var(--accent2);border-color:var(--accent);color:#fff}
-
-    /* HEADER */
-    .header{background:linear-gradient(135deg,#0d1b3e,#162040,#0a1628);border-bottom:1px solid var(--border);padding:calc(10px + var(--safe-top)) 16px 0;position:sticky;top:0;z-index:100}
-    .logo{font-size:22px;font-weight:900;color:var(--accent);text-align:center;letter-spacing:-1px}
-    .subtitle{text-align:center;color:var(--muted);font-size:11px;margin:2px 0 10px}
-    .tabs{display:flex;gap:2px}
-    .tab{flex:1;padding:10px 4px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.2s}
-    .tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(56,189,248,0.05)}
-
-    /* CONTENT */
-    .content{max-width:640px;margin:0 auto;padding:16px 12px calc(20px + var(--safe-bottom))}
-    .page{display:none;animation:fadeUp 0.3s ease}
-    .page.active{display:block}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-
-    /* CARDS */
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px}
-    .card-title{font-size:14px;font-weight:800;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-
-    /* FORM */
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    label{font-size:11px;color:var(--muted);font-weight:700;display:block;margin-bottom:5px}
-    input,select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:inherit;font-size:14px;outline:none;-webkit-appearance:none;transition:border-color 0.2s}
-    input:focus,select:focus{border-color:var(--accent)}
-    .field{margin-bottom:10px}
-    .goals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
-    .goal-btn{padding:10px 8px;border-radius:10px;border:2px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-family:inherit;font-weight:700;font-size:12px;transition:all 0.2s}
-    .goal-btn.selected{border-color:var(--accent);color:var(--accent);background:rgba(56,189,248,0.08)}
-    .btn{background:linear-gradient(135deg,var(--accent2),var(--accent));border:none;border-radius:12px;padding:14px;color:#fff;font-weight:800;font-size:15px;cursor:pointer;width:100%;font-family:inherit;box-shadow:0 4px 20px rgba(14,165,233,0.3);transition:transform 0.1s;margin-top:14px}
-    .btn:active{transform:scale(0.98)}
-
-    /* STATS */
-    .stats2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-    .stats3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-    .stat-box{border-radius:12px;padding:12px;text-align:center}
-    .stat-num{font-size:24px;font-weight:900}
-    .stat-label{font-size:10px;color:var(--muted);margin-top:2px}
-    .blue{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25)}.blue .stat-num{color:var(--accent)}
-    .yellow{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25)}.yellow .stat-num{color:var(--yellow)}
-    .red{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25)}.red .stat-num{color:var(--red)}
-    .purple{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25)}.purple .stat-num{color:var(--purple)}
-    .green{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25)}.green .stat-num{color:var(--green)}
-
-    /* BARS */
-    .macro-bar{margin-bottom:10px}
-    .macro-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:var(--muted)}
-    .macro-row span:last-child{color:var(--text);font-weight:700}
-    .bar-track{background:var(--surface2);border-radius:6px;height:7px;overflow:hidden}
-    .bar-fill{height:100%;border-radius:6px;transition:width 0.6s ease}
-
-    /* FOOD */
-    .search-wrap{position:relative;margin-bottom:12px}
-    .search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none}
-    .ltr .search-icon{right:auto;left:12px}
-    .search-input{padding-right:36px}
-    .ltr .search-input{padding-right:12px;padding-left:36px}
-    .food-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:10px;margin-bottom:8px;cursor:pointer;border:1px solid transparent;transition:border-color 0.2s}
-    .food-item:active{border-color:var(--accent)}
-    .food-emoji{font-size:22px;flex-shrink:0}
-    .food-info{flex:1;min-width:0}
-    .food-name{font-size:13px;font-weight:700}
-    .food-macros{font-size:10px;color:var(--muted);margin-top:1px}
-    .add-btn{background:var(--accent2);border:none;border-radius:8px;padding:6px 10px;color:#fff;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;flex-shrink:0}
-    .food-list{max-height:380px;overflow-y:auto}
-    .food-list::-webkit-scrollbar{width:4px}
-    .food-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-
-    /* TRACKER */
-    .tracker-item{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
-    .tracker-item:last-child{border-bottom:none}
-    .qty-controls{display:flex;align-items:center;gap:5px;flex-shrink:0}
-    .qty-btn{background:var(--border);border:none;border-radius:6px;width:26px;height:26px;color:var(--text);cursor:pointer;font-size:16px;line-height:1}
-    .qty-btn.plus{background:var(--accent2)}
-    .qty-btn.del{background:rgba(239,68,68,0.2);color:var(--red);font-size:12px}
-    .qty-num{font-size:13px;min-width:22px;text-align:center}
-
-    /* PLAN */
-    .meal-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px}
-    .meal-title{font-size:13px;font-weight:800;color:var(--yellow);margin-bottom:8px}
-    .meal-item{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px;color:#94a3b8}
-    .meal-dot{color:var(--accent);font-size:8px}
-    .tip-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--surface2);align-items:center}
-    .tip-row:last-child{border-bottom:none}
-    .tip-icon{font-size:20px;flex-shrink:0}
-    .tip-text{font-size:12px;color:#94a3b8;line-height:1.5}
-
-    /* INSTALL */
-    .install-banner{position:fixed;bottom:calc(16px + var(--safe-bottom));left:12px;right:12px;background:linear-gradient(135deg,#0d3a5e,#0a2540);border:1px solid var(--accent);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;z-index:200;box-shadow:0 8px 32px rgba(2,132,199,0.4);animation:slideUp 0.4s ease;max-width:640px;margin:0 auto}
-    @keyframes slideUp{from{transform:translateY(80px);opacity:0}to{transform:translateY(0);opacity:1}}
-    .install-text{flex:1}
-    .install-title{font-size:13px;font-weight:800;color:var(--accent)}
-    .install-sub{font-size:11px;color:var(--muted);margin-top:2px}
-    .install-btn{background:var(--accent);border:none;border-radius:8px;padding:8px 14px;color:#fff;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;flex-shrink:0}
-    .install-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0 4px}
-    .ios-hint{position:fixed;bottom:calc(16px + var(--safe-bottom));left:12px;right:12px;background:#1a2235;border:1px solid var(--border);border-radius:14px;padding:14px;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:slideUp 0.4s ease}
-    .ios-close{float:left;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;margin-top:-4px}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>FuelAthlete ⚡ PRO</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#0284c7"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0f1e;--sur:#111827;--s2:#0d1b3e;--bdr:#1e3a5f;--ac:#38bdf8;--a2:#0284c7;--tx:#e2e8f0;--mu:#64748b;--rd:#ef4444;--yw:#f59e0b;--gn:#10b981;--pu:#a78bfa;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--tx);font-family:'Inter','Cairo',sans-serif;min-height:100dvh;overflow-x:hidden}
+[dir=rtl]{font-family:'Cairo','Inter',sans-serif}
+.lang-bar{display:flex;justify-content:center;gap:5px;padding:6px 10px;background:#060b18;border-bottom:1px solid var(--bdr);flex-wrap:wrap}
+.lb{background:transparent;border:1px solid var(--bdr);border-radius:20px;padding:3px 10px;color:var(--mu);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.lb.on{background:var(--a2);border-color:var(--ac);color:#fff}
+.hdr{background:linear-gradient(135deg,#0d1b3e,#162040,#0a1628);border-bottom:1px solid var(--bdr);padding:calc(8px + var(--st)) 12px 0;position:sticky;top:0;z-index:100}
+.logo{font-size:20px;font-weight:900;color:var(--ac);text-align:center}
+.sub{text-align:center;color:var(--mu);font-size:10px;margin:1px 0 8px}
+.tabs{display:flex;gap:1px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 7px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:10px;font-weight:700;color:var(--mu);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);background:rgba(56,189,248,.05)}
+.pbadge{display:inline-flex;align-items:center;background:linear-gradient(135deg,#f59e0b,#f97316);border-radius:5px;padding:1px 5px;font-size:8px;font-weight:900;color:#fff;margin-left:3px;vertical-align:middle}
+.ct{max-width:640px;margin:0 auto;padding:14px 11px calc(18px + var(--sb))}
+.pg{display:none;animation:up .3s ease}.pg.on{display:block}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:14px;margin-bottom:12px}
+.ctit{font-size:13px;font-weight:800;color:var(--ac);margin-bottom:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+label{font-size:10px;color:var(--mu);font-weight:700;display:block;margin-bottom:4px}
+input,select{width:100%;background:var(--s2);border:1px solid var(--bdr);border-radius:9px;padding:9px 11px;color:var(--tx);font-family:inherit;font-size:13px;outline:none;-webkit-appearance:none;transition:border-color .2s}
+input:focus,select:focus{border-color:var(--ac)}
+.fld{margin-bottom:9px}
+.gbtns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:3px}
+.gbtn{padding:9px 7px;border-radius:9px;border:2px solid var(--bdr);background:var(--s2);color:var(--mu);cursor:pointer;font-family:inherit;font-weight:700;font-size:11px;transition:all .2s}
+.gbtn.on{border-color:var(--ac);color:var(--ac);background:rgba(56,189,248,.08)}
+.btn{background:linear-gradient(135deg,var(--a2),var(--ac));border:none;border-radius:11px;padding:13px;color:#fff;font-weight:800;font-size:14px;cursor:pointer;width:100%;font-family:inherit;box-shadow:0 4px 18px rgba(14,165,233,.3);transition:transform .1s;margin-top:12px}
+.btn:active{transform:scale(.98)}
+.s2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.s3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.sb2{border-radius:11px;padding:11px;text-align:center}
+.sn{font-size:22px;font-weight:900}.sl{font-size:9px;color:var(--mu);margin-top:1px}
+.blue{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25)}.blue .sn{color:var(--ac)}
+.yel{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25)}.yel .sn{color:var(--yw)}
+.rd2{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25)}.rd2 .sn{color:var(--rd)}
+.pur{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25)}.pur .sn{color:var(--pu)}
+.grn{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25)}.grn .sn{color:var(--gn)}
+.mbar{margin-bottom:9px}
+.mrow{display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;color:var(--mu)}
+.mrow span:last-child{color:var(--tx);font-weight:700}
+.btr{background:var(--s2);border-radius:5px;height:6px;overflow:hidden}
+.bfi{height:100%;border-radius:5px;transition:width .6s ease}
+.sw{position:relative;margin-bottom:10px}
+.si{position:absolute;top:50%;transform:translateY(-50%);color:var(--mu);font-size:13px;pointer-events:none}
+[dir=ltr] .si{left:11px}[dir=rtl] .si{right:11px}
+[dir=ltr] .sip{padding-left:34px}[dir=rtl] .sip{padding-right:34px}
+.flst{max-height:360px;overflow-y:auto;scrollbar-width:thin}
+.flst::-webkit-scrollbar{width:3px}
+.flst::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px}
+.fi{display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--s2);border-radius:9px;margin-bottom:6px;cursor:pointer;border:1px solid transparent;transition:border-color .2s}
+.fi:active{border-color:var(--ac)}
+.fn{font-size:12px;font-weight:700}.fm{font-size:9px;color:var(--mu);margin-top:1px}
+.addb{background:var(--a2);border:none;border-radius:7px;padding:5px 9px;color:#fff;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;flex-shrink:0}
+.ti{display:flex;align-items:center;gap:7px;padding:9px 0;border-bottom:1px solid var(--bdr)}
+.ti:last-child{border-bottom:none}
+.qc{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.qb{background:var(--bdr);border:none;border-radius:5px;width:24px;height:24px;color:var(--tx);cursor:pointer;font-size:14px;line-height:1}
+.qb.p{background:var(--a2)}.qb.d{background:rgba(239,68,68,.2);color:var(--rd);font-size:11px}
+.mc2{background:var(--s2);border:1px solid var(--bdr);border-radius:11px;padding:11px;margin-bottom:9px}
+.mt2{font-size:12px;font-weight:800;color:var(--yw);margin-bottom:7px}
+.cpills{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px;scrollbar-width:none}
+.cpills::-webkit-scrollbar{display:none}
+.cp{flex-shrink:0;padding:5px 11px;border-radius:20px;border:1px solid var(--bdr);background:var(--s2);color:var(--mu);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.cp.on{background:var(--a2);border-color:var(--ac);color:#fff}
+.rc{background:var(--s2);border:1px solid var(--bdr);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer}
+.rc:active{border-color:var(--ac)}
+.rtit{font-size:13px;font-weight:800;margin-bottom:4px}
+.rmeta{font-size:10px;color:var(--mu);display:flex;gap:10px}
+.rdet{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr)}
+.rdet.show{display:block}
+.ir{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid rgba(30,58,95,.5);font-size:11px}
+.ir:last-child{border-bottom:none}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--bdr);border-radius:20px;padding:4px 10px;font-size:11px;margin:3px}
+.chip .rm{background:none;border:none;color:var(--rd);cursor:pointer;font-size:13px;padding:0}
+.plcard{background:var(--s2);border:2px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:10px;position:relative;cursor:pointer;transition:all .2s}
+.plcard.pop{border-color:var(--ac)}
+.plcard.sel{border-color:var(--gn);background:rgba(16,185,129,.05)}
+.ptag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--ac);color:#fff;font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.pname{font-size:15px;font-weight:900;margin-bottom:4px}
+.pprice{font-size:28px;font-weight:900;color:var(--ac)}
+.pprice span{font-size:13px;color:var(--mu);font-weight:400}
+.porig{font-size:12px;color:var(--mu);text-decoration:line-through;margin-top:2px}
+.psave{display:inline-block;background:rgba(16,185,129,.2);color:var(--gn);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:4px}
+.pfeat{margin-top:10px;font-size:11px;color:#94a3b8;line-height:2}
+.ppbox{background:#003087;border-radius:12px;padding:16px;text-align:center;margin-top:12px}
+.ppbtn{background:#ffc439;border:none;border-radius:25px;padding:13px 24px;font-size:15px;font-weight:900;cursor:pointer;width:100%;font-family:inherit;color:#003087}
+.trow{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--s2);align-items:flex-start}
+.trow:last-child{border-bottom:none}
+.locked-card{text-align:center;padding:30px 16px}
+</style>
 </head>
 <body>
 
-<!-- Language Bar -->
 <div class="lang-bar">
-  <button class="lang-btn active" onclick="setLang('ar')">🇸🇦 عربي</button>
-  <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
-  <button class="lang-btn" onclick="setLang('nl')">🇳🇱 Nederlands</button>
-  <button class="lang-btn" onclick="setLang('pt')">🇧🇷 Português</button>
+  <button class="lb on" onclick="setLang('en')">🇬🇧 EN</button>
+  <button class="lb" onclick="setLang('ar')">🇸🇦 AR</button>
+  <button class="lb" onclick="setLang('nl')">🇳🇱 NL</button>
+  <button class="lb" onclick="setLang('pt')">🇧🇷 PT</button>
 </div>
 
-<!-- Header -->
-<div class="header rtl" id="header">
+<div class="hdr">
   <div class="logo">⚡ FuelAthlete</div>
-  <div class="subtitle" id="subtitle">نظامك الغذائي الرياضي الذكي</div>
+  <div class="sub" id="appSub">Smart Sports Nutrition</div>
   <div class="tabs">
-    <button class="tab active" id="tab-btn-calculator" onclick="switchTab('calculator',this)" data-i="tabCalc">🧮 الحاسبة</button>
-    <button class="tab" id="tab-btn-tracker" onclick="switchTab('tracker',this)" data-i="tabTrack">🍽️ تتبع</button>
-    <button class="tab" id="tab-btn-plan" onclick="switchTab('plan',this)" data-i="tabPlan">📋 النظام</button>
+    <button class="tab on" onclick="goTab('calc',this)">🧮 <span id="t0">Calc</span></button>
+    <button class="tab" onclick="goTab('track',this)">🍽️ <span id="t1">Track</span></button>
+    <button class="tab" onclick="goTab('plan',this)">📋 <span id="t2">Plan</span></button>
+    <button class="tab" onclick="goTab('recipes',this)">👨‍🍳 <span id="t3">Recipes</span><span class="pbadge">PRO</span></button>
+    <button class="tab" onclick="goTab('builder',this)">🧪 <span id="t4">Builder</span><span class="pbadge">PRO</span></button>
+    <button class="tab" onclick="goTab('pricing',this)">⭐ <span id="t5">PRO</span></button>
   </div>
 </div>
 
-<div class="content rtl" id="main-content">
+<div class="ct">
 
-<!-- CALCULATOR -->
-<div id="tab-calculator" class="page active">
+<!-- CALC -->
+<div id="tab-calc" class="pg on">
   <div class="card">
-    <div class="card-title" data-i="personalData">👤 بياناتك الشخصية</div>
-    <div class="grid2">
-      <div class="field"><label data-i="age">العمر (سنة)</label><input type="number" id="age" placeholder="25" inputmode="numeric"/></div>
-      <div class="field"><label data-i="weight">الوزن (كيلو)</label><input type="number" id="weight" placeholder="80" inputmode="numeric"/></div>
-      <div class="field"><label data-i="height">الطول (سم)</label><input type="number" id="height" placeholder="175" inputmode="numeric"/></div>
-      <div class="field"><label data-i="gender">الجنس</label>
-        <select id="gender"><option value="male" data-i="male">ذكر</option><option value="female" data-i="female">أنثى</option></select>
+    <div class="ctit">👤 <span id="lPersonal">Personal Data</span></div>
+    <div class="g2">
+      <div class="fld"><label id="lAge">Age</label><input type="number" id="age" placeholder="25" inputmode="numeric"/></div>
+      <div class="fld"><label id="lWeight">Weight (kg)</label><input type="number" id="weight" placeholder="80" inputmode="numeric"/></div>
+      <div class="fld"><label id="lHeight">Height (cm)</label><input type="number" id="height" placeholder="175" inputmode="numeric"/></div>
+      <div class="fld"><label id="lGender">Gender</label>
+        <select id="gender"><option value="male" id="oMale">Male</option><option value="female" id="oFemale">Female</option></select>
       </div>
     </div>
-    <div class="field">
-      <label data-i="activity">مستوى النشاط</label>
+    <div class="fld"><label id="lAct">Activity</label>
       <select id="activity">
-        <option value="1.2" data-i="act1">قليل الحركة</option>
-        <option value="1.375" data-i="act2">نشاط خفيف (1-3 أيام)</option>
-        <option value="1.55" selected data-i="act3">نشاط متوسط (3-5 أيام)</option>
-        <option value="1.725" data-i="act4">نشاط عالي (6-7 أيام)</option>
-        <option value="1.9" data-i="act5">رياضي محترف</option>
+        <option value="1.2" id="oA1">Sedentary</option>
+        <option value="1.375" id="oA2">Light (1-3d)</option>
+        <option value="1.55" selected id="oA3">Moderate (3-5d)</option>
+        <option value="1.725" id="oA4">Very Active (6-7d)</option>
+        <option value="1.9" id="oA5">Pro Athlete</option>
       </select>
     </div>
-    <div class="field">
-      <label data-i="goalLabel">الهدف الرياضي</label>
-      <div class="goals">
-        <button class="goal-btn selected" data-goal="bulking" onclick="selectGoal(this)" data-i="bulking">💪 بناء عضلات</button>
-        <button class="goal-btn" data-goal="cutting" onclick="selectGoal(this)" data-i="cutting">🔥 حرق دهون</button>
-        <button class="goal-btn" data-goal="maintenance" onclick="selectGoal(this)" data-i="maintenance">⚖️ الحفاظ</button>
-        <button class="goal-btn" data-goal="performance" onclick="selectGoal(this)" data-i="performance">⚡ أداء رياضي</button>
+    <div class="fld"><label id="lGoal">Goal</label>
+      <div class="gbtns">
+        <button class="gbtn on" data-goal="bulking" onclick="selGoal(this)" id="gBulk">💪 Build Muscle</button>
+        <button class="gbtn" data-goal="cutting" onclick="selGoal(this)" id="gCut">🔥 Burn Fat</button>
+        <button class="gbtn" data-goal="maintenance" onclick="selGoal(this)" id="gMaint">⚖️ Maintain</button>
+        <button class="gbtn" data-goal="performance" onclick="selGoal(this)" id="gPerf">⚡ Performance</button>
       </div>
     </div>
-    <button class="btn" onclick="calculate()" data-i="calcBtn">احسب احتياجاتي اليومية ⚡</button>
+    <button class="btn" onclick="calculate()" id="calcBtn">Calculate ⚡</button>
   </div>
   <div id="results" style="display:none">
     <div class="card">
-      <div class="card-title" data-i="results">📊 نتائجك</div>
-      <div class="stats2">
-        <div class="stat-box blue"><div class="stat-num" id="r-tdee">0</div><div class="stat-label" data-i="tdeeLabel">معدل الحرق (TDEE)</div></div>
-        <div class="stat-box yellow"><div class="stat-num" id="r-target">0</div><div class="stat-label" data-i="targetLabel">السعرات المستهدفة</div></div>
+      <div class="s2">
+        <div class="sb2 blue"><div class="sn" id="rTDEE">0</div><div class="sl">TDEE</div></div>
+        <div class="sb2 yel"><div class="sn" id="rTarget">0</div><div class="sl" id="lTarget">Target Cal</div></div>
       </div>
-      <div class="card-title" data-i="macros">🥩 الماكروز اليومية</div>
-      <div class="stats3">
-        <div class="stat-box red"><div class="stat-num" id="r-protein">0</div><div class="stat-label" data-i="protein">بروتين (g)</div></div>
-        <div class="stat-box yellow"><div class="stat-num" id="r-carbs">0</div><div class="stat-label" data-i="carbs">كارب (g)</div></div>
-        <div class="stat-box purple"><div class="stat-num" id="r-fat">0</div><div class="stat-label" data-i="fat">دهون (g)</div></div>
+      <div class="s3">
+        <div class="sb2 rd2"><div class="sn" id="rProt">0</div><div class="sl">Protein g</div></div>
+        <div class="sb2 yel"><div class="sn" id="rCarb">0</div><div class="sl">Carbs g</div></div>
+        <div class="sb2 pur"><div class="sn" id="rFat">0</div><div class="sl">Fat g</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- TRACKER -->
-<div id="tab-tracker" class="page">
-  <div id="progress-card" class="card" style="display:none">
-    <div class="card-title" data-i="dailyProgress">📈 التقدم اليومي</div>
-    <div class="stats2" style="margin-bottom:14px">
-      <div class="stat-box blue"><div class="stat-num" id="t-eaten">0</div><div class="stat-label" id="t-label">0</div></div>
-      <div class="stat-box green" id="t-remain-box"><div class="stat-num" id="t-remain">0</div><div class="stat-label" id="t-remain-label" data-i="remaining">متبقي</div></div>
+<!-- TRACK -->
+<div id="tab-track" class="pg">
+  <div id="progCard" class="card" style="display:none">
+    <div class="ctit">📈 <span id="lProg">Progress</span></div>
+    <div class="s2" style="margin-bottom:12px">
+      <div class="sb2 blue"><div class="sn" id="tEaten">0</div><div class="sl" id="tLbl">kcal</div></div>
+      <div class="sb2 grn" id="tRemBox"><div class="sn" id="tRem">0</div><div class="sl" id="tRemLbl">Remaining</div></div>
     </div>
-    <div id="macro-bars"></div>
+    <div id="mBars"></div>
   </div>
-  <div id="eaten-list" class="card" style="display:none">
-    <div class="card-title" data-i="todayMeals">🍽️ وجباتي اليوم</div>
-    <div id="tracker-items"></div>
+  <div id="eatenCard" class="card" style="display:none">
+    <div class="ctit">🍽️ <span id="lToday">Today</span></div>
+    <div id="trackItems"></div>
   </div>
   <div class="card">
-    <div class="card-title" data-i="addFood">🔍 أضف طعام</div>
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" type="search" id="search-input" placeholder="ابحث..." oninput="filterFoods(this.value)"/>
-    </div>
-    <div class="food-list" id="food-list"></div>
+    <div class="ctit">🔍 <span id="lAdd">Add Food</span></div>
+    <div class="cpills" id="catPills"></div>
+    <div class="sw"><span class="si">🔍</span><input class="sip" type="search" id="fsearch" placeholder="Search..." oninput="filterF(this.value)"/></div>
+    <div class="flst" id="foodList"></div>
   </div>
 </div>
 
 <!-- PLAN -->
-<div id="tab-plan" class="page">
+<div id="tab-plan" class="pg">
   <div class="card">
-    <div class="card-title" data-i="yourPlan">🎯 نظامك الغذائي</div>
-    <div id="plan-goal-label" style="font-size:12px;color:var(--muted);margin-bottom:14px" data-i="choosGoalFirst">اختر هدفك في قسم الحاسبة أولاً</div>
-    <div id="meal-plan"></div>
+    <div class="ctit">🎯 <span id="lPlan">Diet Plan</span></div>
+    <div id="planGoal" style="font-size:11px;color:var(--mu);margin-bottom:12px">Choose your goal first</div>
+    <div id="mealPlan"></div>
   </div>
   <div class="card">
-    <div class="card-title" data-i="tips">💡 نصائح للرياضيين</div>
-    <div id="tips-list"></div>
+    <div class="ctit">💡 <span id="lTips">Tips</span></div>
+    <div id="tipsList"></div>
   </div>
-</div>
 </div>
 
-<!-- Install Banner -->
-<div id="install-banner" style="display:none">
-  <div class="install-banner">
-    <span style="font-size:28px">⚡</span>
-    <div class="install-text">
-      <div class="install-title" data-i="installTitle">أضف FuelAthlete لشاشتك</div>
-      <div class="install-sub" data-i="installSub">يشتغل بدون انترنت</div>
+<!-- RECIPES PRO -->
+<div id="tab-recipes" class="pg">
+  <div id="recLocked" class="card locked-card" style="display:none">
+    <div style="font-size:40px;margin-bottom:12px">👨‍🍳</div>
+    <div style="font-size:16px;font-weight:900;color:var(--yw);margin-bottom:8px" id="lProFeat">PRO Feature</div>
+    <div style="font-size:12px;color:var(--mu);margin-bottom:16px" id="lRecDesc">Unlock 20+ athlete recipes</div>
+    <button class="btn" style="margin-top:0" onclick="goTab('pricing',document.querySelectorAll('.tab')[5])" id="lUnlock">⭐ Unlock PRO</button>
+  </div>
+  <div id="recContent">
+    <div class="card">
+      <div class="ctit">👨‍🍳 <span id="lRecipes">Recipes</span></div>
+      <div class="cpills" id="recCats"></div>
+      <div id="recList"></div>
     </div>
-    <button class="install-btn" id="install-btn" data-i="install">ثبّت</button>
-    <button class="install-close" onclick="document.getElementById('install-banner').style.display='none'">×</button>
   </div>
 </div>
 
-<!-- iOS Hint -->
-<div id="ios-hint" style="display:none">
-  <div class="ios-hint">
-    <button class="ios-close" onclick="document.getElementById('ios-hint').style.display='none'">×</button>
-    <div style="font-size:14px;font-weight:800;color:var(--accent);margin-bottom:8px" data-i="iosTitle">⚡ أضف للشاشة الرئيسية</div>
-    <div id="ios-steps" style="font-size:12px;color:#94a3b8;line-height:2"></div>
+<!-- BUILDER PRO -->
+<div id="tab-builder" class="pg">
+  <div id="bldLocked" class="card locked-card" style="display:none">
+    <div style="font-size:40px;margin-bottom:12px">🧪</div>
+    <div style="font-size:16px;font-weight:900;color:var(--yw);margin-bottom:8px" id="lProFeat2">PRO Feature</div>
+    <div style="font-size:12px;color:var(--mu);margin-bottom:16px" id="lBldDesc">Build custom meals</div>
+    <button class="btn" style="margin-top:0" onclick="goTab('pricing',document.querySelectorAll('.tab')[5])" id="lUnlock2">⭐ Unlock PRO</button>
   </div>
+  <div id="bldContent">
+    <div class="card">
+      <div class="ctit">🧪 <span id="lBuilder">Meal Builder</span></div>
+      <div class="fld"><label id="lMealName">Meal Name</label><input type="text" id="bName" placeholder="My Power Bowl"/></div>
+      <div class="sw"><span class="si">🔍</span><input class="sip" type="search" id="bSearch" placeholder="Search..." oninput="filterB(this.value)"/></div>
+      <div class="flst" id="bFoodList" style="max-height:200px"></div>
+      <div style="margin-top:10px">
+        <div style="font-size:10px;font-weight:700;color:var(--mu);margin-bottom:5px" id="lSelIngs">Selected:</div>
+        <div id="bChips" style="min-height:28px"></div>
+      </div>
+      <div id="bTotals" style="display:none;margin-top:10px">
+        <div class="s3">
+          <div class="sb2 blue"><div class="sn" id="bCal">0</div><div class="sl">kcal</div></div>
+          <div class="sb2 rd2"><div class="sn" id="bProt">0</div><div class="sl">Protein</div></div>
+          <div class="sb2 yel"><div class="sn" id="bCarb">0</div><div class="sl">Carbs</div></div>
+        </div>
+      </div>
+      <button class="btn" onclick="saveMeal()" id="lSave">💾 Save Meal</button>
+    </div>
+    <div id="savedCard" class="card" style="display:none">
+      <div class="ctit">💾 <span id="lSaved">Saved Meals</span></div>
+      <div id="savedList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div id="tab-pricing" class="pg">
+  <div class="card">
+    <div class="ctit">⭐ <span id="lGoPro">Go PRO</span></div>
+    <div style="font-size:11px;color:var(--mu);margin-bottom:14px" id="lProDesc">Unlock all features</div>
+
+    <div style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--s2)"><div style="display:flex;gap:8px;align-items:center"><span style="font-size:18px">👨‍🍳</span><div><div style="font-size:12px;font-weight:700" id="f1">20+ Athlete Recipes</div><div style="font-size:10px;color:var(--mu)" id="f1s">Full macro breakdowns</div></div></div><span style="color:var(--gn)">✓</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--s2)"><div style="display:flex;gap:8px;align-items:center"><span style="font-size:18px">🧪</span><div><div style="font-size:12px;font-weight:700" id="f2">Meal Builder</div><div style="font-size:10px;color:var(--mu)" id="f2s">Build & save custom meals</div></div></div><span style="color:var(--gn)">✓</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--s2)"><div style="display:flex;gap:8px;align-items:center"><span style="font-size:18px">🍽️</span><div><div style="font-size:12px;font-weight:700" id="f3">100+ Food Database</div><div style="font-size:10px;color:var(--mu)" id="f3s">Full ingredient details</div></div></div><span style="color:var(--gn)">✓</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0"><div style="display:flex;gap:8px;align-items:center"><span style="font-size:18px">🔄</span><div><div style="font-size:12px;font-weight:700" id="f4">Unlimited Meal Plans</div><div style="font-size:10px;color:var(--mu)" id="f4s">All 4 goal types</div></div></div><span style="color:var(--gn)">✓</span></div>
+    </div>
+
+    <div id="planCards">
+      <div class="plcard" onclick="selPlan('weekly',this)" data-plan="weekly">
+        <div class="pname" id="pW">Weekly</div>
+        <div class="pprice">€5 <span id="pWu">/ week</span></div>
+        <div class="porig" id="pWo">Was €10/week</div>
+        <div class="psave" id="pWs">Save 50%</div>
+        <div class="pfeat"><div>✓ <span id="pWf1">All PRO features</span></div><div>✓ <span id="pWf2">Cancel anytime</span></div></div>
+      </div>
+      <div class="plcard pop" onclick="selPlan('monthly',this)" data-plan="monthly">
+        <div class="ptag" id="pMpop">⭐ Most Popular</div>
+        <div class="pname" id="pM">Monthly</div>
+        <div class="pprice">€13 <span id="pMu">/ month</span></div>
+        <div class="porig" id="pMo">Was €20/month</div>
+        <div class="psave" id="pMs">Save 35% — €3.25/week</div>
+        <div class="pfeat"><div>✓ <span id="pMf1">All PRO features</span></div><div>✓ <span id="pMf2">Cancel anytime</span></div></div>
+      </div>
+      <div class="plcard" onclick="selPlan('yearly',this)" data-plan="yearly">
+        <div class="pname" id="pY">Yearly</div>
+        <div class="pprice">€100 <span id="pYu">/ year</span></div>
+        <div class="porig" id="pYo">Was €150/year</div>
+        <div class="psave" id="pYs">Save 33% — Best Value! 🏆</div>
+        <div class="pfeat"><div>✓ <span id="pYf1">All PRO features</span></div><div>✓ <span id="pYf2">2 months free</span></div></div>
+      </div>
+    </div>
+
+    <div class="ppbox">
+      <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:4px">Pay<span style="color:#009cde">Pal</span></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:12px" id="ppLbl">Select a plan above</div>
+      <button class="ppbtn" onclick="payPal()" id="ppBtn" disabled id="lPayPal">🔒 Pay with PayPal</button>
+      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:8px" id="lSecure">🔒 Secure • Cancel anytime</div>
+    </div>
+
+    <div id="proActive" style="display:none;text-align:center;padding:20px">
+      <div style="font-size:40px;margin-bottom:8px">⭐</div>
+      <div style="font-size:16px;font-weight:900;color:var(--yw)" id="lProOn">You're PRO!</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px" id="proExp"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /ct -->
+
+<!-- iOS hint -->
+<div id="iosHint" style="display:none;position:fixed;bottom:calc(14px + var(--sb));left:10px;right:10px;background:#1a2235;border:1px solid var(--bdr);border-radius:13px;padding:13px;z-index:200">
+  <button style="float:right;background:none;border:none;color:var(--mu);font-size:18px;cursor:pointer" onclick="this.parentElement.parentElement.style.display='none'">×</button>
+  <div style="font-size:13px;font-weight:800;color:var(--ac);margin-bottom:7px">⚡ Add to Home Screen</div>
+  <div id="iosSteps" style="font-size:11px;color:#94a3b8;line-height:2"></div>
 </div>
 
 <script>
-// ===================== TRANSLATIONS =====================
-const T = {
-  ar: {
-    subtitle:"نظامك الغذائي الرياضي الذكي", tabCalc:"🧮 الحاسبة", tabTrack:"🍽️ تتبع", tabPlan:"📋 النظام",
-    personalData:"👤 بياناتك الشخصية", age:"العمر (سنة)", weight:"الوزن (كيلو)", height:"الطول (سم)",
-    gender:"الجنس", male:"ذكر", female:"أنثى",
-    activity:"مستوى النشاط", act1:"قليل الحركة", act2:"نشاط خفيف (1-3 أيام)", act3:"نشاط متوسط (3-5 أيام)", act4:"نشاط عالي (6-7 أيام)", act5:"رياضي محترف",
-    goalLabel:"الهدف الرياضي", bulking:"💪 بناء عضلات", cutting:"🔥 حرق دهون", maintenance:"⚖️ الحفاظ", performance:"⚡ أداء رياضي",
-    calcBtn:"احسب احتياجاتي اليومية ⚡", results:"📊 نتائجك", tdeeLabel:"معدل الحرق (TDEE)", targetLabel:"السعرات المستهدفة",
-    macros:"🥩 الماكروز اليومية", protein:"بروتين (g)", carbs:"كارب (g)", fat:"دهون (g)",
-    dailyProgress:"📈 التقدم اليومي", remaining:"متبقي", exceeded:"تجاوزت", todayMeals:"🍽️ وجباتي اليوم",
-    addFood:"🔍 أضف طعام", search:"ابحث...", addBtn:"+ أضف",
-    yourPlan:"🎯 نظامك الغذائي", choosGoalFirst:"اختر هدفك في قسم الحاسبة أولاً",
-    goalPrefix:"الهدف:", tips:"💡 نصائح للرياضيين",
-    installTitle:"أضف FuelAthlete لشاشتك", installSub:"يشتغل بدون انترنت", install:"ثبّت",
-    iosTitle:"⚡ أضف للشاشة الرئيسية",
-    iosSteps:`اضغط زر المشاركة <b>📤</b> في الأسفل<br/>ثم اختر <b>"Add to Home Screen"</b><br/>واضغط <b>Add</b> ✅`,
-    calorie:"كالوري", goalNames:{bulking:"💪 بناء عضلات",cutting:"🔥 حرق دهون",maintenance:"⚖️ الحفاظ",performance:"⚡ الأداء"},
-    tips_list:["💧 اشرب 3-4 لتر ماء يومياً","🥩 وزع البروتين على 5-6 وجبات","⏰ تناول الكارب قبل وبعد التمرين","🛌 وجبة بروتين قبل النوم","🚫 تجنب السكريات والصوديوم الزائد","📅 أعد حساب احتياجاتك كل 4 أسابيع","😴 نم 7-9 ساعات للتعافي"],
-    mealNames:{breakfast:"🌅 الإفطار",preworkout:"⚡ قبل التمرين",postworkout:"💪 بعد التمرين",lunch:"☀️ الغداء",dinner:"🌙 العشاء",snack:"🍎 وجبة خفيفة",presleep:"😴 قبل النوم"},
-  },
-  en: {
-    subtitle:"Your Smart Sports Nutrition System", tabCalc:"🧮 Calculator", tabTrack:"🍽️ Track", tabPlan:"📋 Plan",
-    personalData:"👤 Your Personal Data", age:"Age (years)", weight:"Weight (kg)", height:"Height (cm)",
-    gender:"Gender", male:"Male", female:"Female",
-    activity:"Activity Level", act1:"Sedentary", act2:"Light activity (1-3 days)", act3:"Moderate (3-5 days)", act4:"Very active (6-7 days)", act5:"Professional athlete",
-    goalLabel:"Sports Goal", bulking:"💪 Build Muscle", cutting:"🔥 Burn Fat", maintenance:"⚖️ Maintain", performance:"⚡ Performance",
-    calcBtn:"Calculate My Daily Needs ⚡", results:"📊 Your Results", tdeeLabel:"Burn Rate (TDEE)", targetLabel:"Target Calories",
-    macros:"🥩 Daily Macros", protein:"Protein (g)", carbs:"Carbs (g)", fat:"Fat (g)",
-    dailyProgress:"📈 Daily Progress", remaining:"Remaining", exceeded:"Exceeded", todayMeals:"🍽️ Today's Meals",
-    addFood:"🔍 Add Food", search:"Search...", addBtn:"+ Add",
-    yourPlan:"🎯 Your Diet Plan", choosGoalFirst:"Choose your goal in the Calculator tab first",
-    goalPrefix:"Goal:", tips:"💡 Athlete Tips",
-    installTitle:"Add FuelAthlete to your screen", installSub:"Works offline", install:"Install",
-    iosTitle:"⚡ Add to Home Screen",
-    iosSteps:`Tap the Share button <b>📤</b> at the bottom<br/>Then choose <b>"Add to Home Screen"</b><br/>Tap <b>Add</b> ✅`,
-    calorie:"kcal", goalNames:{bulking:"💪 Build Muscle",cutting:"🔥 Burn Fat",maintenance:"⚖️ Maintain",performance:"⚡ Performance"},
-    tips_list:["💧 Drink 3-4 liters of water daily","🥩 Spread protein across 5-6 meals","⏰ Eat carbs before and after training","🛌 Protein snack before bed","🚫 Avoid excess sugar and sodium","📅 Recalculate needs every 4 weeks","😴 Sleep 7-9 hours for recovery"],
-    mealNames:{breakfast:"🌅 Breakfast",preworkout:"⚡ Pre-Workout",postworkout:"💪 Post-Workout",lunch:"☀️ Lunch",dinner:"🌙 Dinner",snack:"🍎 Snack",presleep:"😴 Before Sleep"},
-  },
-  nl: {
-    subtitle:"Jouw Slim Sportvoedingssysteem", tabCalc:"🧮 Calculator", tabTrack:"🍽️ Bijhouden", tabPlan:"📋 Plan",
-    personalData:"👤 Jouw Gegevens", age:"Leeftijd (jaar)", weight:"Gewicht (kg)", height:"Lengte (cm)",
-    gender:"Geslacht", male:"Man", female:"Vrouw",
-    activity:"Activiteitsniveau", act1:"Zittend", act2:"Lichte activiteit (1-3 dagen)", act3:"Matig actief (3-5 dagen)", act4:"Zeer actief (6-7 dagen)", act5:"Professioneel atleet",
-    goalLabel:"Sportdoel", bulking:"💪 Spieren opbouwen", cutting:"🔥 Vet verbranden", maintenance:"⚖️ Gewicht behouden", performance:"⚡ Prestaties verbeteren",
-    calcBtn:"Bereken mijn dagelijkse behoefte ⚡", results:"📊 Jouw Resultaten", tdeeLabel:"Verbranding (TDEE)", targetLabel:"Doelcalorieën",
-    macros:"🥩 Dagelijkse Macro's", protein:"Eiwit (g)", carbs:"Koolhydraten (g)", fat:"Vet (g)",
-    dailyProgress:"📈 Dagelijkse Voortgang", remaining:"Resterend", exceeded:"Overschreden", todayMeals:"🍽️ Maaltijden van vandaag",
-    addFood:"🔍 Voedsel toevoegen", search:"Zoeken...", addBtn:"+ Toevoegen",
-    yourPlan:"🎯 Jouw Voedingsplan", choosGoalFirst:"Kies eerst je doel in de Calculator",
-    goalPrefix:"Doel:", tips:"💡 Sporttips",
-    installTitle:"Voeg FuelAthlete toe aan je scherm", installSub:"Werkt offline", install:"Installeren",
-    iosTitle:"⚡ Voeg toe aan beginscherm",
-    iosSteps:`Tik op de Delen knop <b>📤</b> onderaan<br/>Kies <b>"Zet op beginscherm"</b><br/>Tik op <b>Voeg toe</b> ✅`,
-    calorie:"kcal", goalNames:{bulking:"💪 Spieren opbouwen",cutting:"🔥 Vet verbranden",maintenance:"⚖️ Behouden",performance:"⚡ Prestaties"},
-    tips_list:["💧 Drink 3-4 liter water per dag","🥩 Verdeel eiwitten over 5-6 maaltijden","⏰ Eet koolhydraten voor en na training","🛌 Eiwitsnack voor het slapengaan","🚫 Vermijd suiker en te veel natrium","📅 Herbereken behoeften elke 4 weken","😴 Slaap 7-9 uur voor herstel"],
-    mealNames:{breakfast:"🌅 Ontbijt",preworkout:"⚡ Voor Training",postworkout:"💪 Na Training",lunch:"☀️ Lunch",dinner:"🌙 Avondeten",snack:"🍎 Tussendoortje",presleep:"😴 Voor het Slapen"},
-  },
-  pt: {
-    subtitle:"Seu Sistema Inteligente de Nutrição Esportiva", tabCalc:"🧮 Calculadora", tabTrack:"🍽️ Rastrear", tabPlan:"📋 Plano",
-    personalData:"👤 Seus Dados Pessoais", age:"Idade (anos)", weight:"Peso (kg)", height:"Altura (cm)",
-    gender:"Gênero", male:"Masculino", female:"Feminino",
-    activity:"Nível de Atividade", act1:"Sedentário", act2:"Atividade leve (1-3 dias)", act3:"Moderado (3-5 dias)", act4:"Muito ativo (6-7 dias)", act5:"Atleta profissional",
-    goalLabel:"Objetivo Esportivo", bulking:"💪 Ganhar Músculo", cutting:"🔥 Queimar Gordura", maintenance:"⚖️ Manter Peso", performance:"⚡ Melhorar Desempenho",
-    calcBtn:"Calcular Minhas Necessidades Diárias ⚡", results:"📊 Seus Resultados", tdeeLabel:"Taxa de Queima (TDEE)", targetLabel:"Calorias Alvo",
-    macros:"🥩 Macros Diários", protein:"Proteína (g)", carbs:"Carboidratos (g)", fat:"Gordura (g)",
-    dailyProgress:"📈 Progresso Diário", remaining:"Restante", exceeded:"Excedido", todayMeals:"🍽️ Refeições de Hoje",
-    addFood:"🔍 Adicionar Alimento", search:"Buscar...", addBtn:"+ Adicionar",
-    yourPlan:"🎯 Seu Plano Alimentar", choosGoalFirst:"Escolha seu objetivo na aba Calculadora primeiro",
-    goalPrefix:"Objetivo:", tips:"💡 Dicas para Atletas",
-    installTitle:"Adicione FuelAthlete à sua tela", installSub:"Funciona offline", install:"Instalar",
-    iosTitle:"⚡ Adicionar à tela inicial",
-    iosSteps:`Toque no botão Compartilhar <b>📤</b> abaixo<br/>Escolha <b>"Adicionar à tela inicial"</b><br/>Toque em <b>Adicionar</b> ✅`,
-    calorie:"kcal", goalNames:{bulking:"💪 Ganhar Músculo",cutting:"🔥 Queimar Gordura",maintenance:"⚖️ Manter",performance:"⚡ Desempenho"},
-    tips_list:["💧 Beba 3-4 litros de água por dia","🥩 Distribua proteína em 5-6 refeições","⏰ Coma carboidratos antes e após treino","🛌 Lanche proteico antes de dormir","🚫 Evite açúcar e sódio em excesso","📅 Recalcule suas necessidades a cada 4 semanas","😴 Durma 7-9 horas para recuperação"],
-    mealNames:{breakfast:"🌅 Café da manhã",preworkout:"⚡ Pré-Treino",postworkout:"💪 Pós-Treino",lunch:"☀️ Almoço",dinner:"🌙 Jantar",snack:"🍎 Lanche",presleep:"😴 Antes de Dormir"},
-  }
-};
+// ── TRANSLATIONS ──────────────────────────────────────────
+const TR={
+en:{
+  sub:"Smart Sports Nutrition",t0:"Calc",t1:"Track",t2:"Plan",t3:"Recipes",t4:"Builder",t5:"PRO",
+  lPersonal:"Personal Data",lAge:"Age (years)",lWeight:"Weight (kg)",lHeight:"Height (cm)",lGender:"Gender",
+  oMale:"Male",oFemale:"Female",lAct:"Activity Level",
+  oA1:"Sedentary",oA2:"Light (1-3 days)",oA3:"Moderate (3-5 days)",oA4:"Very Active (6-7 days)",oA5:"Pro Athlete",
+  lGoal:"Sport Goal",gBulk:"💪 Build Muscle",gCut:"🔥 Burn Fat",gMaint:"⚖️ Maintain",gPerf:"⚡ Performance",
+  calcBtn:"Calculate My Daily Needs ⚡",lTarget:"Target Cal",lProg:"Daily Progress",tRemLbl:"Remaining",tExc:"Exceeded",
+  lToday:"Today's Meals",lAdd:"Add Food",lPlan:"Diet Plan",planGoal:"Choose your goal first",lTips:"Tips",
+  lProFeat:"PRO Feature",lRecDesc:"Unlock 20+ athlete recipes with full macros",lUnlock:"⭐ Unlock PRO",
+  lProFeat2:"PRO Feature",lBldDesc:"Build custom meals from ingredients",lUnlock2:"⭐ Unlock PRO",
+  lRecipes:"Athlete Recipes",lBuilder:"Meal Builder",lMealName:"Meal Name",lSelIngs:"Selected Ingredients:",
+  lSave:"💾 Save Meal",lSaved:"Saved Meals",lGoPro:"Go PRO",lProDesc:"Unlock all features",
+  f1:"20+ Athlete Recipes",f1s:"Full macro breakdowns",f2:"Meal Builder",f2s:"Build & save meals",
+  f3:"100+ Food Database",f3s:"Full ingredient details",f4:"Unlimited Meal Plans",f4s:"All 4 goal types",
+  pW:"Weekly",pWu:"/ week",pWo:"Was €10/week",pWs:"Save 50%",pWf1:"All PRO features",pWf2:"Cancel anytime",
+  pM:"Monthly",pMu:"/ month",pMo:"Was €20/month",pMs:"Save 35% — €3.25/week",pMpop:"⭐ Most Popular",
+  pMf1:"All PRO features",pMf2:"Cancel anytime",
+  pY:"Yearly",pYu:"/ year",pYo:"Was €150/year",pYs:"Save 33% — Best Value! 🏆",pYf1:"All PRO features",pYf2:"2 months free",
+  ppLbl:"Select a plan above",lPayPal:"🔒 Pay with PayPal",lSecure:"🔒 Secure payment • Cancel anytime",lProOn:"You're PRO!",
+  catAll:"All",catProt:"🥩 Protein",catCarb:"🌾 Carbs",catFat:"🥑 Fats",catVeg:"🥦 Veggies",catDai:"🥛 Dairy",catFru:"🍌 Fruits",catSup:"💊 Supps",
+  rAll:"All",rBulk:"💪 Bulk",rCut:"🔥 Cut",rBreak:"🌅 Breakfast",rPost:"⚡ Post-Workout",
+  iosSteps:"Tap Share 📤 at the bottom<br/>Choose <b>Add to Home Screen</b><br/>Tap <b>Add</b> ✅",
+  tips:["💧 Drink 3-4 liters of water daily","🥩 Spread protein across 5-6 meals","⏰ Eat carbs before and after training","🛌 Protein snack before bed","🚫 Avoid excess sugar and sodium","📅 Recalculate needs every 4 weeks","😴 Sleep 7-9 hours for recovery","🧂 Monitor your sodium intake","🍋 Vitamin C aids iron absorption","🌿 Creatine is safe & effective"],
+  mN:{breakfast:"🌅 Breakfast",preworkout:"⚡ Pre-Workout",postworkout:"💪 Post-Workout",lunch:"☀️ Lunch",dinner:"🌙 Dinner",snack:"🍎 Snack",presleep:"😴 Before Sleep"},
+  gN:{bulking:"💪 Build Muscle",cutting:"🔥 Burn Fat",maintenance:"⚖️ Maintain",performance:"⚡ Performance"},gPfx:"Goal:",
+  ing:"Ingredients",steps:"Steps",
+},
+ar:{
+  sub:"نظامك الغذائي الرياضي الذكي",t0:"الحاسبة",t1:"تتبع",t2:"النظام",t3:"وصفات",t4:"منشئ",t5:"برو",
+  lPersonal:"بياناتك الشخصية",lAge:"العمر (سنة)",lWeight:"الوزن (كيلو)",lHeight:"الطول (سم)",lGender:"الجنس",
+  oMale:"ذكر",oFemale:"أنثى",lAct:"مستوى النشاط",
+  oA1:"قليل الحركة",oA2:"نشاط خفيف (1-3)",oA3:"نشاط متوسط (3-5)",oA4:"نشاط عالي (6-7)",oA5:"رياضي محترف",
+  lGoal:"الهدف الرياضي",gBulk:"💪 بناء عضلات",gCut:"🔥 حرق دهون",gMaint:"⚖️ الحفاظ",gPerf:"⚡ الأداء",
+  calcBtn:"احسب احتياجاتي اليومية ⚡",lTarget:"السعرات المستهدفة",lProg:"التقدم اليومي",tRemLbl:"متبقي",tExc:"تجاوزت",
+  lToday:"وجباتي اليوم",lAdd:"أضف طعام",lPlan:"نظامك الغذائي",planGoal:"اختر هدفك في الحاسبة أولاً",lTips:"نصائح للرياضيين",
+  lProFeat:"ميزة برو",lRecDesc:"افتح 20+ وصفة رياضية احترافية",lUnlock:"⭐ افتح برو",
+  lProFeat2:"ميزة برو",lBldDesc:"ابنِ وجبات مخصصة من المكونات",lUnlock2:"⭐ افتح برو",
+  lRecipes:"وصفات الرياضيين",lBuilder:"منشئ الوجبات",lMealName:"اسم الوجبة",lSelIngs:"المكونات المختارة:",
+  lSave:"💾 حفظ الوجبة",lSaved:"الوجبات المحفوظة",lGoPro:"اشترك برو",lProDesc:"افتح جميع المميزات",
+  f1:"20+ وصفة رياضية",f1s:"تفاصيل الماكروز الكاملة",f2:"منشئ الوجبات",f2s:"ابنِ وحفظ وجباتك",
+  f3:"100+ صنف غذائي",f3s:"تفاصيل المكونات الكاملة",f4:"خطط غذائية غير محدودة",f4s:"جميع الأهداف الأربعة",
+  pW:"أسبوعي",pWu:"/ أسبوع",pWo:"كانت €10",pWs:"وفّر 50%",pWf1:"جميع مميزات برو",pWf2:"إلغاء في أي وقت",
+  pM:"شهري",pMu:"/ شهر",pMo:"كانت €20",pMs:"وفّر 35% — €3.25/أسبوع",pMpop:"⭐ الأكثر شعبية",
+  pMf1:"جميع مميزات برو",pMf2:"إلغاء في أي وقت",
+  pY:"سنوي",pYu:"/ سنة",pYo:"كانت €150",pYs:"وفّر 33% — الأفضل قيمة! 🏆",pYf1:"جميع مميزات برو",pYf2:"شهران مجانيان",
+  ppLbl:"اختر خطة من الأعلى",lPayPal:"🔒 الدفع عبر PayPal",lSecure:"🔒 دفع آمن • إلغاء في أي وقت",lProOn:"أنت مشترك برو!",
+  catAll:"الكل",catProt:"🥩 بروتين",catCarb:"🌾 كارب",catFat:"🥑 دهون",catVeg:"🥦 خضار",catDai:"🥛 ألبان",catFru:"🍌 فواكه",catSup:"💊 مكملات",
+  rAll:"الكل",rBulk:"💪 بناء",rCut:"🔥 حرق",rBreak:"🌅 إفطار",rPost:"⚡ بعد تمرين",
+  iosSteps:"اضغط زر المشاركة 📤<br/>اختر <b>Add to Home Screen</b><br/>اضغط <b>Add</b> ✅",
+  tips:["💧 اشرب 3-4 لتر ماء يومياً","🥩 وزع البروتين على 5-6 وجبات","⏰ تناول الكارب قبل وبعد التمرين","🛌 وجبة بروتين قبل النوم","🚫 تجنب السكريات والصوديوم الزائد","📅 أعد حساب احتياجاتك كل 4 أسابيع","😴 نم 7-9 ساعات للتعافي","🧂 راقب مستوى الصوديوم","🍋 فيتامين C يساعد امتصاص الحديد","🌿 الكرياتين آمن وفعال"],
+  mN:{breakfast:"🌅 الإفطار",preworkout:"⚡ قبل التمرين",postworkout:"💪 بعد التمرين",lunch:"☀️ الغداء",dinner:"🌙 العشاء",snack:"🍎 وجبة خفيفة",presleep:"😴 قبل النوم"},
+  gN:{bulking:"💪 بناء عضلات",cutting:"🔥 حرق دهون",maintenance:"⚖️ الحفاظ",performance:"⚡ الأداء"},gPfx:"الهدف:",
+  ing:"المكونات",steps:"طريقة التحضير",
+},
+nl:{
+  sub:"Jouw Slim Sportvoedingssysteem",t0:"Calc",t1:"Bijhouden",t2:"Plan",t3:"Recepten",t4:"Bouwer",t5:"PRO",
+  lPersonal:"Jouw Gegevens",lAge:"Leeftijd",lWeight:"Gewicht (kg)",lHeight:"Lengte (cm)",lGender:"Geslacht",
+  oMale:"Man",oFemale:"Vrouw",lAct:"Activiteitsniveau",
+  oA1:"Zittend",oA2:"Licht (1-3d)",oA3:"Matig (3-5d)",oA4:"Zeer actief (6-7d)",oA5:"Pro atleet",
+  lGoal:"Sportdoel",gBulk:"💪 Spieren opbouwen",gCut:"🔥 Vet verbranden",gMaint:"⚖️ Behouden",gPerf:"⚡ Prestaties",
+  calcBtn:"Bereken mijn behoefte ⚡",lTarget:"Doelcalorieën",lProg:"Voortgang",tRemLbl:"Resterend",tExc:"Overschreden",
+  lToday:"Maaltijden vandaag",lAdd:"Voedsel toevoegen",lPlan:"Voedingsplan",planGoal:"Kies eerst je doel",lTips:"Sporttips",
+  lProFeat:"PRO Functie",lRecDesc:"Ontgrendel 20+ recepten",lUnlock:"⭐ PRO Ontgrendelen",
+  lProFeat2:"PRO Functie",lBldDesc:"Maak aangepaste maaltijden",lUnlock2:"⭐ PRO Ontgrendelen",
+  lRecipes:"Atletrecepten",lBuilder:"Maaltijdbouwer",lMealName:"Naam maaltijd",lSelIngs:"Geselecteerde ingrediënten:",
+  lSave:"💾 Opslaan",lSaved:"Opgeslagen maaltijden",lGoPro:"Word PRO",lProDesc:"Ontgrendel alle functies",
+  f1:"20+ Recepten",f1s:"Volledige macro's",f2:"Maaltijdbouwer",f2s:"Bouw & sla op",
+  f3:"100+ Voedingsmiddelen",f3s:"Ingrediëntdetails",f4:"Onbeperkte plannen",f4s:"Alle 4 doeltypes",
+  pW:"Wekelijks",pWu:"/ week",pWo:"Was €10/week",pWs:"Bespaar 50%",pWf1:"Alle PRO functies",pWf2:"Altijd opzegbaar",
+  pM:"Maandelijks",pMu:"/ maand",pMo:"Was €20/maand",pMs:"Bespaar 35%",pMpop:"⭐ Meest Populair",
+  pMf1:"Alle PRO functies",pMf2:"Altijd opzegbaar",
+  pY:"Jaarlijks",pYu:"/ jaar",pYo:"Was €150/jaar",pYs:"Bespaar 33% 🏆",pYf1:"Alle PRO functies",pYf2:"2 maanden gratis",
+  ppLbl:"Selecteer een plan",lPayPal:"🔒 Betalen via PayPal",lSecure:"🔒 Veilig • Altijd opzegbaar",lProOn:"Je bent PRO!",
+  catAll:"Alles",catProt:"🥩 Eiwit",catCarb:"🌾 Koolhyd.",catFat:"🥑 Vetten",catVeg:"🥦 Groenten",catDai:"🥛 Zuivel",catFru:"🍌 Fruit",catSup:"💊 Suppl.",
+  rAll:"Alles",rBulk:"💪 Bulk",rCut:"🔥 Cut",rBreak:"🌅 Ontbijt",rPost:"⚡ Na Training",
+  iosSteps:"Tik op Delen 📤<br/>Kies <b>Zet op beginscherm</b><br/>Tik op <b>Voeg toe</b> ✅",
+  tips:["💧 Drink 3-4 liter water","🥩 Verdeel eiwit over 5-6 maaltijden","⏰ Koolhydraten voor & na training","🛌 Eiwitsnack voor slapengaan","🚫 Vermijd suiker en natrium","📅 Herbereken elke 4 weken","😴 Slaap 7-9 uur","🧂 Monitor natrium","🍋 Vitamine C helpt ijzeropname","🌿 Creatine is veilig"],
+  mN:{breakfast:"🌅 Ontbijt",preworkout:"⚡ Voor Training",postworkout:"💪 Na Training",lunch:"☀️ Lunch",dinner:"🌙 Avondeten",snack:"🍎 Tussendoortje",presleep:"😴 Voor Slapen"},
+  gN:{bulking:"💪 Spieren",cutting:"🔥 Vet verbranden",maintenance:"⚖️ Behouden",performance:"⚡ Prestaties"},gPfx:"Doel:",
+  ing:"Ingrediënten",steps:"Stappen",
+},
+pt:{
+  sub:"Sua Nutrição Esportiva Inteligente",t0:"Calc",t1:"Rastrear",t2:"Plano",t3:"Receitas",t4:"Construtor",t5:"PRO",
+  lPersonal:"Seus Dados",lAge:"Idade (anos)",lWeight:"Peso (kg)",lHeight:"Altura (cm)",lGender:"Gênero",
+  oMale:"Masculino",oFemale:"Feminino",lAct:"Nível de Atividade",
+  oA1:"Sedentário",oA2:"Leve (1-3d)",oA3:"Moderado (3-5d)",oA4:"Muito ativo (6-7d)",oA5:"Atleta pro",
+  lGoal:"Objetivo",gBulk:"💪 Ganhar Músculo",gCut:"🔥 Queimar Gordura",gMaint:"⚖️ Manter",gPerf:"⚡ Desempenho",
+  calcBtn:"Calcular Minhas Necessidades ⚡",lTarget:"Calorias Alvo",lProg:"Progresso",tRemLbl:"Restante",tExc:"Excedido",
+  lToday:"Refeições de Hoje",lAdd:"Adicionar Alimento",lPlan:"Plano Alimentar",planGoal:"Escolha seu objetivo primeiro",lTips:"Dicas",
+  lProFeat:"Recurso PRO",lRecDesc:"Desbloqueie 20+ receitas",lUnlock:"⭐ Desbloquear PRO",
+  lProFeat2:"Recurso PRO",lBldDesc:"Crie refeições personalizadas",lUnlock2:"⭐ Desbloquear PRO",
+  lRecipes:"Receitas para Atletas",lBuilder:"Construtor de Refeições",lMealName:"Nome da Refeição",lSelIngs:"Ingredientes:",
+  lSave:"💾 Salvar",lSaved:"Refeições Salvas",lGoPro:"Seja PRO",lProDesc:"Desbloqueie todos os recursos",
+  f1:"20+ Receitas",f1s:"Análise completa",f2:"Construtor",f2s:"Crie e salve refeições",
+  f3:"100+ Alimentos",f3s:"Detalhes completos",f4:"Planos Ilimitados",f4s:"Todos os 4 objetivos",
+  pW:"Semanal",pWu:"/ semana",pWo:"Era €10/semana",pWs:"Economize 50%",pWf1:"Todos recursos PRO",pWf2:"Cancele quando quiser",
+  pM:"Mensal",pMu:"/ mês",pMo:"Era €20/mês",pMs:"Economize 35%",pMpop:"⭐ Mais Popular",
+  pMf1:"Todos recursos PRO",pMf2:"Cancele quando quiser",
+  pY:"Anual",pYu:"/ ano",pYo:"Era €150/ano",pYs:"Economize 33% 🏆",pYf1:"Todos recursos PRO",pYf2:"2 meses grátis",
+  ppLbl:"Selecione um plano",lPayPal:"🔒 Pagar com PayPal",lSecure:"🔒 Seguro • Cancele quando quiser",lProOn:"Você é PRO!",
+  catAll:"Todos",catProt:"🥩 Proteína",catCarb:"🌾 Carboidratos",catFat:"🥑 Gorduras",catVeg:"🥦 Vegetais",catDai:"🥛 Laticínios",catFru:"🍌 Frutas",catSup:"💊 Suplementos",
+  rAll:"Todos",rBulk:"💪 Bulking",rCut:"🔥 Cutting",rBreak:"🌅 Café manhã",rPost:"⚡ Pós-Treino",
+  iosSteps:"Toque em Compartilhar 📤<br/>Escolha <b>Adicionar à tela inicial</b><br/>Toque em <b>Adicionar</b> ✅",
+  tips:["💧 Beba 3-4 litros de água","🥩 Distribua proteína em 5-6 refeições","⏰ Carboidratos antes e após treino","🛌 Lanche proteico antes de dormir","🚫 Evite açúcar e sódio","📅 Recalcule a cada 4 semanas","😴 Durma 7-9 horas","🧂 Monitore sódio","🍋 Vit C ajuda absorção de ferro","🌿 Creatina é segura"],
+  mN:{breakfast:"🌅 Café da manhã",preworkout:"⚡ Pré-Treino",postworkout:"💪 Pós-Treino",lunch:"☀️ Almoço",dinner:"🌙 Jantar",snack:"🍎 Lanche",presleep:"😴 Antes Dormir"},
+  gN:{bulking:"💪 Músculo",cutting:"🔥 Gordura",maintenance:"⚖️ Manter",performance:"⚡ Desempenho"},gPfx:"Objetivo:",
+  ing:"Ingredientes",steps:"Passos",
+}};
 
-// ===================== FOODS (multilingual) =====================
-const foodsData = [
-  // Proteins
-  {id:"chicken",   e:"🍗", cal:165,p:31,  c:0,   f:3.6, names:{ar:"دجاج مشوي (100g)",    en:"Grilled Chicken (100g)",   nl:"Gegrilde Kip (100g)",        pt:"Frango Grelhado (100g)"}},
-  {id:"tuna",      e:"🐟", cal:116,p:25.5,c:0,   f:1,   names:{ar:"تونة معلبة (100g)",    en:"Canned Tuna (100g)",       nl:"Tonijn uit blik (100g)",     pt:"Atum em Lata (100g)"}},
-  {id:"salmon",    e:"🐠", cal:208,p:20,  c:0,   f:13,  names:{ar:"سلمون (100g)",          en:"Salmon (100g)",            nl:"Zalm (100g)",                pt:"Salmão (100g)"}},
-  {id:"egg",       e:"🥚", cal:78, p:6,   c:0.6, f:5,   names:{ar:"بيض مسلوق (بيضة)",     en:"Boiled Egg",               nl:"Gekookt Ei",                 pt:"Ovo Cozido"}},
-  {id:"mozz",      e:"🧀", cal:280,p:28,  c:3.1, f:17,  names:{ar:"موزاريلا (100g)",       en:"Mozzarella (100g)",        nl:"Mozzarella (100g)",          pt:"Muçarela (100g)"}},
-  {id:"turkey",    e:"🦃", cal:135,p:30,  c:0,   f:1,   names:{ar:"ديك رومي (100g)",       en:"Turkey Breast (100g)",     nl:"Kalkoenfilet (100g)",        pt:"Peito de Peru (100g)"}},
-  {id:"shrimp",    e:"🍤", cal:99, p:24,  c:0,   f:0.3, names:{ar:"روبيان مطبوخ (100g)",   en:"Cooked Shrimp (100g)",     nl:"Gekookte Garnalen (100g)",   pt:"Camarão Cozido (100g)"}},
-  {id:"beef",      e:"🥩", cal:250,p:26,  c:0,   f:15,  names:{ar:"لحم بقري مشوي (100g)",  en:"Grilled Beef (100g)",      nl:"Gegrild Rundvlees (100g)",   pt:"Carne Bovina Grelhada (100g)"}},
-  // Carbs
-  {id:"rice",      e:"🍚", cal:130,p:2.7, c:28,  f:0.3, names:{ar:"أرز مسلوق (100g)",      en:"Cooked Rice (100g)",       nl:"Gekookte Rijst (100g)",      pt:"Arroz Cozido (100g)"}},
-  {id:"oats",      e:"🌾", cal:389,p:17,  c:66,  f:7,   names:{ar:"شوفان (100g)",           en:"Oats (100g)",              nl:"Havermout (100g)",           pt:"Aveia (100g)"}},
-  {id:"sweetpot",  e:"🍠", cal:86, p:1.6, c:20,  f:0.1, names:{ar:"بطاطا حلوة (100g)",     en:"Sweet Potato (100g)",      nl:"Zoete Aardappel (100g)",     pt:"Batata Doce (100g)"}},
-  {id:"bread",     e:"🍞", cal:81, p:4,   c:15,  f:1,   names:{ar:"خبز أسمر (شريحة)",       en:"Brown Bread (slice)",      nl:"Volkorenbrood (snee)",       pt:"Pão Integral (fatia)"}},
-  {id:"banana",    e:"🍌", cal:89, p:1.1, c:23,  f:0.3, names:{ar:"موز (حبة)",              en:"Banana",                   nl:"Banaan",                     pt:"Banana"}},
-  {id:"apple",     e:"🍎", cal:95, p:0.5, c:25,  f:0.3, names:{ar:"تفاح (حبة)",             en:"Apple",                    nl:"Appel",                      pt:"Maçã"}},
-  {id:"pasta",     e:"🍝", cal:131,p:5,   c:25,  f:1.1, names:{ar:"باستا مسلوقة (100g)",    en:"Cooked Pasta (100g)",      nl:"Gekookte Pasta (100g)",      pt:"Macarrão Cozido (100g)"}},
-  {id:"quinoa",    e:"🌿", cal:120,p:4.4, c:21,  f:1.9, names:{ar:"كينوا مطبوخة (100g)",   en:"Cooked Quinoa (100g)",     nl:"Gekookte Quinoa (100g)",     pt:"Quinoa Cozida (100g)"}},
-  {id:"potato",    e:"🥔", cal:93, p:2,   c:21,  f:0.1, names:{ar:"بطاطس مسلوقة (100g)",   en:"Boiled Potato (100g)",     nl:"Gekookte Aardappel (100g)", pt:"Batata Cozida (100g)"}},
-  // Fats & Dairy
-  {id:"almonds",   e:"🥜", cal:173,p:6,   c:6,   f:15,  names:{ar:"لوز (30g)",              en:"Almonds (30g)",            nl:"Amandelen (30g)",            pt:"Amêndoas (30g)"}},
-  {id:"milk",      e:"🥛", cal:149,p:8,   c:12,  f:8,   names:{ar:"حليب (كوب 240ml)",       en:"Milk (cup 240ml)",         nl:"Melk (kop 240ml)",           pt:"Leite (copo 240ml)"}},
-  {id:"greek_yog", e:"🥛", cal:59, p:10,  c:3.6, f:0.4, names:{ar:"زبادي يوناني (100g)",    en:"Greek Yogurt (100g)",      nl:"Griekse Yoghurt (100g)",     pt:"Iogurte Grego (100g)"}},
-  {id:"olive_oil", e:"🫒", cal:119,p:0,   c:0,   f:14,  names:{ar:"زيت زيتون (ملعقة)",      en:"Olive Oil (tbsp)",         nl:"Olijfolie (eetlepel)",       pt:"Azeite (colher)"}},
-  {id:"avocado",   e:"🥑", cal:160,p:2,   c:9,   f:15,  names:{ar:"أفوكادو (نصف حبة)",      en:"Avocado (half)",           nl:"Avocado (half)",             pt:"Abacate (metade)"}},
-  {id:"nuts",      e:"🥜", cal:170,p:5,   c:6,   f:15,  names:{ar:"مكسرات مشكلة (30g)",     en:"Mixed Nuts (30g)",         nl:"Gemengde Noten (30g)",       pt:"Castanhas Mistas (30g)"}},
-  // Vegetables & Legumes
-  {id:"spinach",   e:"🥬", cal:23, p:2.9, c:3.6, f:0.4, names:{ar:"سبانخ (100g)",           en:"Spinach (100g)",           nl:"Spinazie (100g)",            pt:"Espinafre (100g)"}},
-  {id:"broccoli",  e:"🥦", cal:34, p:2.8, c:7,   f:0.4, names:{ar:"بروكلي (100g)",          en:"Broccoli (100g)",          nl:"Broccoli (100g)",            pt:"Brócolis (100g)"}},
-  {id:"lentils",   e:"🫘", cal:116,p:9,   c:20,  f:0.4, names:{ar:"عدس مطبوخ (100g)",       en:"Cooked Lentils (100g)",    nl:"Gekookte Linzen (100g)",     pt:"Lentilha Cozida (100g)"}},
-  {id:"foul",      e:"🫘", cal:110,p:8,   c:18,  f:0.5, names:{ar:"فول مدمس (100g)",        en:"Fava Beans (100g)",        nl:"Tuinbonen (100g)",           pt:"Fava Cozida (100g)"}},
-  {id:"chickpeas", e:"🫘", cal:164,p:8.9, c:27,  f:2.6, names:{ar:"حمص مطبوخ (100g)",       en:"Cooked Chickpeas (100g)",  nl:"Gekookte Kikkererwten (100g)",pt:"Grão-de-Bico (100g)"}},
-  {id:"cucumber",  e:"🥒", cal:15, p:0.7, c:3.6, f:0.1, names:{ar:"خيار (100g)",             en:"Cucumber (100g)",          nl:"Komkommer (100g)",           pt:"Pepino (100g)"}},
-  {id:"tomato",    e:"🍅", cal:18, p:0.9, c:3.9, f:0.2, names:{ar:"طماطم (100g)",            en:"Tomato (100g)",            nl:"Tomaat (100g)",              pt:"Tomate (100g)"}},
-  // Special / regional
-  {id:"stroopwaf", e:"🍪", cal:200,p:1.5, c:35,  f:6,   names:{ar:"ستروبوافل (هولندي)",      en:"Stroopwafel",              nl:"Stroopwafel",                pt:"Stroopwafel"}},
-  {id:"hagelslag", e:"🍫", cal:180,p:2,   c:30,  f:5,   names:{ar:"هاجلسلاج (100g)",         en:"Hagelslag / Choc Sprinkles",nl:"Hagelslag (100g)",           pt:"Granulado de Chocolate"}},
-  {id:"pindakaas", e:"🥜", cal:180,p:7,   c:6,   f:15,  names:{ar:"زبدة الفول السوداني (30g)",en:"Peanut Butter (30g)",      nl:"Pindakaas (30g)",            pt:"Pasta de Amendoim (30g)"}},
-  {id:"acai",      e:"🫐", cal:70, p:1.4, c:4,   f:5,   names:{ar:"أساي (100g)",             en:"Açaí (100g)",              nl:"Açaí (100g)",                pt:"Açaí (100g)"}},
-  {id:"whey",      e:"💪", cal:120,p:24,  c:4,   f:1.5, names:{ar:"بروتين واي (سكوب)",       en:"Whey Protein (scoop)",     nl:"Wei-Proteïne (schep)",       pt:"Whey Protein (dose)"}},
-  {id:"cottage",   e:"🥛", cal:98, p:11,  c:3.4, f:4.5, names:{ar:"جبن قريش (100g)",         en:"Cottage Cheese (100g)",    nl:"Kwark (100g)",               pt:"Queijo Cottage (100g)"}},
+// ── FOODS ─────────────────────────────────────────────────
+const F=[
+ {id:"chicken",e:"🍗",c:"protein",cal:165,p:31,cb:0,f:3.6,n:{en:"Grilled Chicken 100g",ar:"دجاج مشوي 100g",nl:"Gegrilde Kip 100g",pt:"Frango Grelhado 100g"},i:{en:["100g chicken breast","1 tsp olive oil","Salt & pepper"],ar:["100g صدر دجاج","ملعقة زيت زيتون","ملح وفلفل"],nl:["100g kipfilet","1 tl olijfolie","Zout en peper"],pt:["100g peito frango","1 col. azeite","Sal e pimenta"]}},
+ {id:"turkey",e:"🦃",c:"protein",cal:135,p:30,cb:0,f:1,n:{en:"Turkey Breast 100g",ar:"ديك رومي 100g",nl:"Kalkoenfilet 100g",pt:"Peito de Peru 100g"},i:{en:["100g turkey","Herbs","Salt"],ar:["100g ديك رومي","أعشاب","ملح"],nl:["100g kalkoen","Kruiden","Zout"],pt:["100g peru","Ervas","Sal"]}},
+ {id:"tuna",e:"🐟",c:"protein",cal:116,p:25.5,cb:0,f:1,n:{en:"Canned Tuna 100g",ar:"تونة معلبة 100g",nl:"Tonijn 100g",pt:"Atum em Lata 100g"},i:{en:["100g tuna in water","Lemon","Salt"],ar:["100g تونة","ليمون","ملح"],nl:["100g tonijn","Citroen","Zout"],pt:["100g atum","Limão","Sal"]}},
+ {id:"salmon",e:"🐠",c:"protein",cal:208,p:20,cb:0,f:13,n:{en:"Salmon 100g",ar:"سلمون 100g",nl:"Zalm 100g",pt:"Salmão 100g"},i:{en:["100g salmon","Dill","Lemon"],ar:["100g سلمون","شبت","ليمون"],nl:["100g zalm","Dille","Citroen"],pt:["100g salmão","Endro","Limão"]}},
+ {id:"sardines",e:"🐟",c:"protein",cal:208,p:24.6,cb:0,f:11.5,n:{en:"Sardines 100g",ar:"سردين 100g",nl:"Sardines 100g",pt:"Sardinhas 100g"},i:{en:["100g sardines"],ar:["100g سردين"],nl:["100g sardines"],pt:["100g sardinhas"]}},
+ {id:"shrimp",e:"🍤",c:"protein",cal:99,p:24,cb:0,f:0.3,n:{en:"Cooked Shrimp 100g",ar:"روبيان مطبوخ 100g",nl:"Garnalen 100g",pt:"Camarão 100g"},i:{en:["100g shrimp","Garlic","Olive oil"],ar:["100g روبيان","ثوم","زيت زيتون"],nl:["100g garnalen","Knoflook","Olijfolie"],pt:["100g camarão","Alho","Azeite"]}},
+ {id:"beef",e:"🥩",c:"protein",cal:250,p:26,cb:0,f:15,n:{en:"Grilled Beef 100g",ar:"لحم بقري مشوي 100g",nl:"Rundvlees 100g",pt:"Carne Bovina 100g"},i:{en:["100g beef","Salt","Pepper","Garlic"],ar:["100g لحم بقري","ملح","فلفل","ثوم"],nl:["100g rundvlees","Zout","Peper","Knoflook"],pt:["100g carne","Sal","Pimenta","Alho"]}},
+ {id:"lamb",e:"🐑",c:"protein",cal:294,p:25,cb:0,f:21,n:{en:"Lamb 100g",ar:"لحم خروف 100g",nl:"Lam 100g",pt:"Cordeiro 100g"},i:{en:["100g lamb","Rosemary","Salt"],ar:["100g خروف","إكليل الجبل","ملح"],nl:["100g lam","Rozemarijn","Zout"],pt:["100g cordeiro","Alecrim","Sal"]}},
+ {id:"egg",e:"🥚",c:"protein",cal:78,p:6,cb:0.6,f:5,n:{en:"Boiled Egg",ar:"بيض مسلوق",nl:"Gekookt Ei",pt:"Ovo Cozido"},i:{en:["1 large egg"],ar:["بيضة كبيرة"],nl:["1 groot ei"],pt:["1 ovo grande"]}},
+ {id:"eggwhite",e:"🥚",c:"protein",cal:17,p:3.6,cb:0.2,f:0.1,n:{en:"Egg White",ar:"بياض البيض",nl:"Eiwit",pt:"Clara de Ovo"},i:{en:["1 egg white"],ar:["بياض بيضة"],nl:["1 eiwit"],pt:["1 clara"]}},
+ {id:"cottage",e:"🥛",c:"protein",cal:98,p:11,cb:3.4,f:4.5,n:{en:"Cottage Cheese 100g",ar:"جبن قريش 100g",nl:"Kwark 100g",pt:"Queijo Cottage 100g"},i:{en:["100g cottage cheese"],ar:["100g جبن قريش"],nl:["100g kwark"],pt:["100g queijo cottage"]}},
+ {id:"mozz",e:"🧀",c:"protein",cal:280,p:28,cb:3.1,f:17,n:{en:"Mozzarella 100g",ar:"موزاريلا 100g",nl:"Mozzarella 100g",pt:"Muçarela 100g"},i:{en:["100g mozzarella"],ar:["100g موزاريلا"],nl:["100g mozzarella"],pt:["100g muçarela"]}},
+ {id:"whey",e:"💪",c:"supps",cal:120,p:24,cb:4,f:1.5,n:{en:"Whey Protein (scoop)",ar:"بروتين واي (سكوب)",nl:"Wei-Proteïne (schep)",pt:"Whey Protein (dose)"},i:{en:["1 scoop whey","250ml water"],ar:["سكوب واي","250ml ماء"],nl:["1 schep wei","250ml water"],pt:["1 dose whey","250ml água"]}},
+ {id:"casein",e:"🥛",c:"supps",cal:110,p:24,cb:3,f:1,n:{en:"Casein Protein (scoop)",ar:"كازين (سكوب)",nl:"Caseïne (schep)",pt:"Caseína (dose)"},i:{en:["1 scoop casein","250ml water"],ar:["سكوب كازين","250ml ماء"],nl:["1 schep caseïne","250ml water"],pt:["1 dose caseína","250ml água"]}},
+ {id:"rice",e:"🍚",c:"carbs",cal:130,p:2.7,cb:28,f:0.3,n:{en:"Cooked Rice 100g",ar:"أرز مسلوق 100g",nl:"Gekookte Rijst 100g",pt:"Arroz Cozido 100g"},i:{en:["100g rice","200ml water","Salt"],ar:["100g أرز","200ml ماء","ملح"],nl:["100g rijst","200ml water","Zout"],pt:["100g arroz","200ml água","Sal"]}},
+ {id:"brownrice",e:"🍚",c:"carbs",cal:112,p:2.6,cb:23,f:0.9,n:{en:"Brown Rice 100g",ar:"أرز بني 100g",nl:"Bruine Rijst 100g",pt:"Arroz Integral 100g"},i:{en:["100g brown rice","220ml water"],ar:["100g أرز بني","220ml ماء"],nl:["100g bruine rijst","220ml water"],pt:["100g arroz integral","220ml água"]}},
+ {id:"oats",e:"🌾",c:"carbs",cal:389,p:17,cb:66,f:7,n:{en:"Oats 100g",ar:"شوفان 100g",nl:"Havermout 100g",pt:"Aveia 100g"},i:{en:["100g oats","200ml milk","Salt"],ar:["100g شوفان","200ml حليب","ملح"],nl:["100g havermout","200ml melk","Zout"],pt:["100g aveia","200ml leite","Sal"]}},
+ {id:"sweetpot",e:"🍠",c:"carbs",cal:86,p:1.6,cb:20,f:0.1,n:{en:"Sweet Potato 100g",ar:"بطاطا حلوة 100g",nl:"Zoete Aardappel 100g",pt:"Batata Doce 100g"},i:{en:["100g sweet potato","Cinnamon","Olive oil"],ar:["100g بطاطا حلوة","قرفة","زيت زيتون"],nl:["100g zoete aardappel","Kaneel","Olijfolie"],pt:["100g batata doce","Canela","Azeite"]}},
+ {id:"potato",e:"🥔",c:"carbs",cal:93,p:2,cb:21,f:0.1,n:{en:"Boiled Potato 100g",ar:"بطاطس مسلوقة 100g",nl:"Aardappel 100g",pt:"Batata Cozida 100g"},i:{en:["100g potato","Water","Salt"],ar:["100g بطاطس","ماء","ملح"],nl:["100g aardappel","Water","Zout"],pt:["100g batata","Água","Sal"]}},
+ {id:"pasta",e:"🍝",c:"carbs",cal:131,p:5,cb:25,f:1.1,n:{en:"Cooked Pasta 100g",ar:"باستا مسلوقة 100g",nl:"Pasta 100g",pt:"Macarrão 100g"},i:{en:["100g pasta","Water","Salt"],ar:["100g باستا","ماء","ملح"],nl:["100g pasta","Water","Zout"],pt:["100g macarrão","Água","Sal"]}},
+ {id:"quinoa",e:"🌿",c:"carbs",cal:120,p:4.4,cb:21,f:1.9,n:{en:"Cooked Quinoa 100g",ar:"كينوا مطبوخة 100g",nl:"Quinoa 100g",pt:"Quinoa Cozida 100g"},i:{en:["100g quinoa","200ml water","Salt"],ar:["100g كينوا","200ml ماء","ملح"],nl:["100g quinoa","200ml water","Zout"],pt:["100g quinoa","200ml água","Sal"]}},
+ {id:"bread",e:"🍞",c:"carbs",cal:81,p:4,cb:15,f:1,n:{en:"Brown Bread (slice)",ar:"خبز أسمر (شريحة)",nl:"Volkorenbrood (snee)",pt:"Pão Integral (fatia)"},i:{en:["1 slice bread"],ar:["شريحة خبز"],nl:["1 snee brood"],pt:["1 fatia pão"]}},
+ {id:"ricecake",e:"🍘",c:"carbs",cal:35,p:0.7,cb:7.3,f:0.3,n:{en:"Rice Cake",ar:"كعكة أرز",nl:"Rijstwafel",pt:"Bolo de Arroz"},i:{en:["1 rice cake"],ar:["كعكة أرز"],nl:["1 rijstwafel"],pt:["1 bolo de arroz"]}},
+ {id:"granola",e:"🌾",c:"carbs",cal:471,p:10,cb:64,f:20,n:{en:"Granola 100g",ar:"جرانولا 100g",nl:"Granola 100g",pt:"Granola 100g"},i:{en:["100g granola","Honey","Nuts"],ar:["100g جرانولا","عسل","مكسرات"],nl:["100g granola","Honing","Noten"],pt:["100g granola","Mel","Nozes"]}},
+ {id:"honey",e:"🍯",c:"carbs",cal:304,p:0.3,cb:82,f:0,n:{en:"Honey (1 tbsp)",ar:"عسل (ملعقة)",nl:"Honing (eetlepel)",pt:"Mel (colher)"},i:{en:["1 tbsp honey"],ar:["ملعقة عسل"],nl:["1 el honing"],pt:["1 col. mel"]}},
+ {id:"dates",e:"🌴",c:"carbs",cal:277,p:1.8,cb:75,f:0.2,n:{en:"Dates 100g",ar:"تمر 100g",nl:"Dadels 100g",pt:"Tâmaras 100g"},i:{en:["100g dates"],ar:["100g تمر"],nl:["100g dadels"],pt:["100g tâmaras"]}},
+ {id:"banana",e:"🍌",c:"fruit",cal:89,p:1.1,cb:23,f:0.3,n:{en:"Banana",ar:"موز",nl:"Banaan",pt:"Banana"},i:{en:["1 medium banana"],ar:["موزة متوسطة"],nl:["1 banaan"],pt:["1 banana"]}},
+ {id:"apple",e:"🍎",c:"fruit",cal:95,p:0.5,cb:25,f:0.3,n:{en:"Apple",ar:"تفاح",nl:"Appel",pt:"Maçã"},i:{en:["1 apple"],ar:["تفاحة"],nl:["1 appel"],pt:["1 maçã"]}},
+ {id:"orange",e:"🍊",c:"fruit",cal:62,p:1.2,cb:15,f:0.2,n:{en:"Orange",ar:"برتقال",nl:"Sinaasappel",pt:"Laranja"},i:{en:["1 orange"],ar:["برتقالة"],nl:["1 sinaasappel"],pt:["1 laranja"]}},
+ {id:"berries",e:"🫐",c:"fruit",cal:57,p:0.7,cb:14,f:0.3,n:{en:"Mixed Berries 100g",ar:"توت مشكل 100g",nl:"Bessen 100g",pt:"Frutas Vermelhas 100g"},i:{en:["100g mixed berries"],ar:["100g توت"],nl:["100g bessen"],pt:["100g frutas"]}},
+ {id:"mango",e:"🥭",c:"fruit",cal:60,p:0.8,cb:15,f:0.4,n:{en:"Mango 100g",ar:"مانجو 100g",nl:"Mango 100g",pt:"Manga 100g"},i:{en:["100g mango"],ar:["100g مانجو"],nl:["100g mango"],pt:["100g manga"]}},
+ {id:"strawberry",e:"🍓",c:"fruit",cal:32,p:0.7,cb:7.7,f:0.3,n:{en:"Strawberries 100g",ar:"فراولة 100g",nl:"Aardbeien 100g",pt:"Morangos 100g"},i:{en:["100g strawberries"],ar:["100g فراولة"],nl:["100g aardbeien"],pt:["100g morangos"]}},
+ {id:"acai",e:"🫐",c:"fruit",cal:70,p:1.4,cb:4,f:5,n:{en:"Açaí 100g",ar:"أساي 100g",nl:"Açaí 100g",pt:"Açaí 100g"},i:{en:["100g açaí"],ar:["100g أساي"],nl:["100g açaí"],pt:["100g açaí"]}},
+ {id:"almonds",e:"🥜",c:"fat",cal:173,p:6,cb:6,f:15,n:{en:"Almonds 30g",ar:"لوز 30g",nl:"Amandelen 30g",pt:"Amêndoas 30g"},i:{en:["30g almonds"],ar:["30g لوز"],nl:["30g amandelen"],pt:["30g amêndoas"]}},
+ {id:"walnuts",e:"🥜",c:"fat",cal:185,p:4,cb:4,f:18,n:{en:"Walnuts 30g",ar:"جوز 30g",nl:"Walnoten 30g",pt:"Nozes 30g"},i:{en:["30g walnuts"],ar:["30g جوز"],nl:["30g walnoten"],pt:["30g nozes"]}},
+ {id:"peanutbutter",e:"🥜",c:"fat",cal:180,p:7,cb:6,f:15,n:{en:"Peanut Butter 30g",ar:"زبدة فول سوداني 30g",nl:"Pindakaas 30g",pt:"Pasta de Amendoim 30g"},i:{en:["30g peanut butter"],ar:["30g زبدة فول سوداني"],nl:["30g pindakaas"],pt:["30g pasta amendoim"]}},
+ {id:"avocado",e:"🥑",c:"fat",cal:160,p:2,cb:9,f:15,n:{en:"Avocado (half)",ar:"أفوكادو (نصف)",nl:"Avocado (half)",pt:"Abacate (metade)"},i:{en:["Half avocado","Lemon","Salt"],ar:["نصف أفوكادو","ليمون","ملح"],nl:["Halve avocado","Citroen","Zout"],pt:["Meio abacate","Limão","Sal"]}},
+ {id:"olive_oil",e:"🫒",c:"fat",cal:119,p:0,cb:0,f:14,n:{en:"Olive Oil 1 tbsp",ar:"زيت زيتون ملعقة",nl:"Olijfolie 1 el",pt:"Azeite 1 col."},i:{en:["1 tbsp olive oil"],ar:["ملعقة زيت زيتون"],nl:["1 el olijfolie"],pt:["1 col. azeite"]}},
+ {id:"nuts",e:"🥜",c:"fat",cal:170,p:5,cb:6,f:15,n:{en:"Mixed Nuts 30g",ar:"مكسرات مشكلة 30g",nl:"Gemengde Noten 30g",pt:"Castanhas Mistas 30g"},i:{en:["30g mixed nuts"],ar:["30g مكسرات"],nl:["30g noten"],pt:["30g castanhas"]}},
+ {id:"milk",e:"🥛",c:"dairy",cal:149,p:8,cb:12,f:8,n:{en:"Milk 240ml",ar:"حليب 240ml",nl:"Melk 240ml",pt:"Leite 240ml"},i:{en:["240ml whole milk"],ar:["240ml حليب كامل"],nl:["240ml volle melk"],pt:["240ml leite integral"]}},
+ {id:"skimmed",e:"🥛",c:"dairy",cal:86,p:8.4,cb:12,f:0.4,n:{en:"Skimmed Milk 240ml",ar:"حليب خالي دسم 240ml",nl:"Magere Melk 240ml",pt:"Leite Desnatado 240ml"},i:{en:["240ml skimmed milk"],ar:["240ml حليب خالي دسم"],nl:["240ml magere melk"],pt:["240ml leite desnatado"]}},
+ {id:"greek_yog",e:"🥛",c:"dairy",cal:59,p:10,cb:3.6,f:0.4,n:{en:"Greek Yogurt 100g",ar:"زبادي يوناني 100g",nl:"Griekse Yoghurt 100g",pt:"Iogurte Grego 100g"},i:{en:["100g Greek yogurt"],ar:["100g زبادي يوناني"],nl:["100g Griekse yoghurt"],pt:["100g iogurte grego"]}},
+ {id:"kefir",e:"🥛",c:"dairy",cal:61,p:3.4,cb:4.8,f:3.5,n:{en:"Kefir 100ml",ar:"كفير 100ml",nl:"Kefir 100ml",pt:"Kefir 100ml"},i:{en:["100ml kefir"],ar:["100ml كفير"],nl:["100ml kefir"],pt:["100ml kefir"]}},
+ {id:"spinach",e:"🥬",c:"veg",cal:23,p:2.9,cb:3.6,f:0.4,n:{en:"Spinach 100g",ar:"سبانخ 100g",nl:"Spinazie 100g",pt:"Espinafre 100g"},i:{en:["100g spinach","Garlic","Olive oil"],ar:["100g سبانخ","ثوم","زيت زيتون"],nl:["100g spinazie","Knoflook","Olijfolie"],pt:["100g espinafre","Alho","Azeite"]}},
+ {id:"broccoli",e:"🥦",c:"veg",cal:34,p:2.8,cb:7,f:0.4,n:{en:"Broccoli 100g",ar:"بروكلي 100g",nl:"Broccoli 100g",pt:"Brócolis 100g"},i:{en:["100g broccoli","Olive oil","Garlic"],ar:["100g بروكلي","زيت زيتون","ثوم"],nl:["100g broccoli","Olijfolie","Knoflook"],pt:["100g brócolis","Azeite","Alho"]}},
+ {id:"cucumber",e:"🥒",c:"veg",cal:15,p:0.7,cb:3.6,f:0.1,n:{en:"Cucumber 100g",ar:"خيار 100g",nl:"Komkommer 100g",pt:"Pepino 100g"},i:{en:["100g cucumber"],ar:["100g خيار"],nl:["100g komkommer"],pt:["100g pepino"]}},
+ {id:"tomato",e:"🍅",c:"veg",cal:18,p:0.9,cb:3.9,f:0.2,n:{en:"Tomato 100g",ar:"طماطم 100g",nl:"Tomaat 100g",pt:"Tomate 100g"},i:{en:["100g tomato"],ar:["100g طماطم"],nl:["100g tomaat"],pt:["100g tomate"]}},
+ {id:"bellpep",e:"🫑",c:"veg",cal:31,p:1,cb:6,f:0.3,n:{en:"Bell Pepper 100g",ar:"فلفل 100g",nl:"Paprika 100g",pt:"Pimentão 100g"},i:{en:["100g bell pepper"],ar:["100g فلفل"],nl:["100g paprika"],pt:["100g pimentão"]}},
+ {id:"mushroom",e:"🍄",c:"veg",cal:22,p:3.1,cb:3.3,f:0.3,n:{en:"Mushrooms 100g",ar:"فطر 100g",nl:"Champignons 100g",pt:"Cogumelos 100g"},i:{en:["100g mushrooms","Garlic","Butter"],ar:["100g فطر","ثوم","زبدة"],nl:["100g champignons","Knoflook","Boter"],pt:["100g cogumelos","Alho","Manteiga"]}},
+ {id:"kale",e:"🥬",c:"veg",cal:49,p:4.3,cb:9,f:0.9,n:{en:"Kale 100g",ar:"كيل 100g",nl:"Boerenkool 100g",pt:"Couve 100g"},i:{en:["100g kale","Olive oil","Salt"],ar:["100g كيل","زيت زيتون","ملح"],nl:["100g boerenkool","Olijfolie","Zout"],pt:["100g couve","Azeite","Sal"]}},
+ {id:"asparagus",e:"🌿",c:"veg",cal:20,p:2.2,cb:3.9,f:0.1,n:{en:"Asparagus 100g",ar:"هليون 100g",nl:"Asperges 100g",pt:"Aspargos 100g"},i:{en:["100g asparagus","Olive oil","Lemon"],ar:["100g هليون","زيت زيتون","ليمون"],nl:["100g asperges","Olijfolie","Citroen"],pt:["100g aspargos","Azeite","Limão"]}},
+ {id:"zucchini",e:"🥒",c:"veg",cal:17,p:1.2,cb:3.1,f:0.3,n:{en:"Zucchini 100g",ar:"كوسا 100g",nl:"Courgette 100g",pt:"Abobrinha 100g"},i:{en:["100g zucchini","Olive oil"],ar:["100g كوسا","زيت زيتون"],nl:["100g courgette","Olijfolie"],pt:["100g abobrinha","Azeite"]}},
+ {id:"lentils",e:"🫘",c:"carbs",cal:116,p:9,cb:20,f:0.4,n:{en:"Cooked Lentils 100g",ar:"عدس مطبوخ 100g",nl:"Linzen 100g",pt:"Lentilha 100g"},i:{en:["100g lentils","Onion","Tomato","Spices"],ar:["100g عدس","بصل","طماطم","بهارات"],nl:["100g linzen","Ui","Tomaat","Kruiden"],pt:["100g lentilhas","Cebola","Tomate","Temperos"]}},
+ {id:"chickpeas",e:"🫘",c:"carbs",cal:164,p:8.9,cb:27,f:2.6,n:{en:"Chickpeas 100g",ar:"حمص مطبوخ 100g",nl:"Kikkererwten 100g",pt:"Grão-de-Bico 100g"},i:{en:["100g chickpeas","Olive oil","Spices"],ar:["100g حمص","زيت زيتون","بهارات"],nl:["100g kikkererwten","Olijfolie","Kruiden"],pt:["100g grão-de-bico","Azeite","Temperos"]}},
+ {id:"foul",e:"🫘",c:"carbs",cal:110,p:8,cb:18,f:0.5,n:{en:"Fava Beans 100g",ar:"فول مدمس 100g",nl:"Tuinbonen 100g",pt:"Fava 100g"},i:{en:["100g fava beans","Olive oil","Garlic"],ar:["100g فول","زيت زيتون","ثوم"],nl:["100g tuinbonen","Olijfolie","Knoflook"],pt:["100g favas","Azeite","Alho"]}},
+ {id:"edamame",e:"🫘",c:"protein",cal:121,p:11,cb:9,f:5,n:{en:"Edamame 100g",ar:"إيدامامي 100g",nl:"Edamame 100g",pt:"Edamame 100g"},i:{en:["100g edamame","Salt"],ar:["100g إيدامامي","ملح"],nl:["100g edamame","Zout"],pt:["100g edamame","Sal"]}},
+ {id:"creatine",e:"⚗️",c:"supps",cal:0,p:0,cb:0,f:0,n:{en:"Creatine 5g",ar:"كرياتين 5g",nl:"Creatine 5g",pt:"Creatina 5g"},i:{en:["5g creatine","250ml water"],ar:["5g كرياتين","250ml ماء"],nl:["5g creatine","250ml water"],pt:["5g creatina","250ml água"]}},
+ {id:"bcaa",e:"💊",c:"supps",cal:20,p:5,cb:0,f:0,n:{en:"BCAA (serving)",ar:"BCAA حصة",nl:"BCAA (portie)",pt:"BCAA (dose)"},i:{en:["1 serving BCAA","300ml water"],ar:["حصة BCAA","300ml ماء"],nl:["1 portie BCAA","300ml water"],pt:["1 dose BCAA","300ml água"]}},
+ {id:"vitd",e:"☀️",c:"supps",cal:0,p:0,cb:0,f:0,n:{en:"Vitamin D3",ar:"فيتامين D3",nl:"Vitamine D3",pt:"Vitamina D3"},i:{en:["1 capsule D3 2000IU"],ar:["كبسولة D3 2000IU"],nl:["1 capsule D3"],pt:["1 cápsula D3"]}},
+ {id:"omega3",e:"🐟",c:"supps",cal:30,p:0,cb:0,f:3,n:{en:"Omega-3 capsule",ar:"أوميغا 3 كبسول",nl:"Omega-3 capsule",pt:"Ômega-3 cápsula"},i:{en:["1-2 fish oil capsules"],ar:["1-2 كبسول زيت سمك"],nl:["1-2 visolie capsules"],pt:["1-2 cápsulas óleo peixe"]}},
+ {id:"stroopwaf",e:"🍪",c:"carbs",cal:200,p:1.5,cb:35,f:6,n:{en:"Stroopwafel",ar:"ستروبوافل",nl:"Stroopwafel",pt:"Stroopwafel"},i:{en:["1 stroopwafel"],ar:["ستروبوافل واحدة"],nl:["1 stroopwafel"],pt:["1 stroopwafel"]}},
+ {id:"tofu",e:"🫘",c:"protein",cal:76,p:8,cb:1.9,f:4.2,n:{en:"Tofu 100g",ar:"توفو 100g",nl:"Tofu 100g",pt:"Tofu 100g"},i:{en:["100g firm tofu","Soy sauce","Garlic"],ar:["100g توفو","صلصة صويا","ثوم"],nl:["100g tofu","Sojasaus","Knoflook"],pt:["100g tofu","Shoyu","Alho"]}},
+ {id:"tempeh",e:"🫘",c:"protein",cal:193,p:19,cb:9,f:11,n:{en:"Tempeh 100g",ar:"تيمبيه 100g",nl:"Tempeh 100g",pt:"Tempeh 100g"},i:{en:["100g tempeh"],ar:["100g تيمبيه"],nl:["100g tempeh"],pt:["100g tempeh"]}},
+ {id:"hummus",e:"🫘",c:"fat",cal:177,p:5,cb:14,f:10,n:{en:"Hummus 100g",ar:"حمص دسم 100g",nl:"Hummus 100g",pt:"Homus 100g"},i:{en:["100g hummus","Lemon","Tahini"],ar:["100g حمص","ليمون","طحينة"],nl:["100g hummus","Citroen","Tahin"],pt:["100g homus","Limão","Tahine"]}},
+ {id:"chia",e:"🌱",c:"fat",cal:137,p:4.4,cb:12,f:9,n:{en:"Chia Seeds 30g",ar:"بذور شيا 30g",nl:"Chiazaad 30g",pt:"Sementes Chia 30g"},i:{en:["30g chia seeds","Water to soak"],ar:["30g بذور شيا","ماء للنقع"],nl:["30g chiazaad","Water"],pt:["30g sementes chia","Água"]}},
+ {id:"flaxseed",e:"🌱",c:"fat",cal:150,p:5,cb:8,f:12,n:{en:"Flax Seeds 30g",ar:"بذور كتان 30g",nl:"Lijnzaad 30g",pt:"Semente de Linhaça 30g"},i:{en:["30g flax seeds"],ar:["30g بذور كتان"],nl:["30g lijnzaad"],pt:["30g linhaça"]}},
+ {id:"coconut",e:"🥥",c:"fat",cal:354,p:3.3,cb:15,f:33,n:{en:"Coconut 100g",ar:"جوز الهند 100g",nl:"Kokosnoot 100g",pt:"Coco 100g"},i:{en:["100g coconut flesh"],ar:["100g لحم جوز هند"],nl:["100g kokos"],pt:["100g coco"]}},
+ {id:"cottage2",e:"🧀",c:"dairy",cal:113,p:14,cb:3.4,f:5,n:{en:"Skyr 100g",ar:"سكير 100g",nl:"Skyr 100g",pt:"Skyr 100g"},i:{en:["100g skyr"],ar:["100g سكير"],nl:["100g skyr"],pt:["100g skyr"]}},
+ {id:"eggnog",e:"🥚",c:"dairy",cal:88,p:4.4,cb:8.4,f:3.5,n:{en:"Whole Egg Scrambled",ar:"بيض مخفوق",nl:"Roerei",pt:"Ovo Mexido"},i:{en:["2 eggs","Butter","Salt"],ar:["بيضتان","زبدة","ملح"],nl:["2 eieren","Boter","Zout"],pt:["2 ovos","Manteiga","Sal"]}},
+ {id:"prot_bar",e:"🍫",c:"supps",cal:200,p:20,cb:22,f:6,n:{en:"Protein Bar",ar:"بار بروتين",nl:"Eiwitreep",pt:"Barra de Proteína"},i:{en:["1 protein bar (check label)"],ar:["بار بروتين واحد"],nl:["1 eiwitreep"],pt:["1 barra proteína"]}},
+ {id:"corn",e:"🌽",c:"carbs",cal:86,p:3.2,cb:19,f:1.2,n:{en:"Corn 100g",ar:"ذرة 100g",nl:"Maïs 100g",pt:"Milho 100g"},i:{en:["100g corn"],ar:["100g ذرة"],nl:["100g maïs"],pt:["100g milho"]}},
+ {id:"peas",e:"🫛",c:"carbs",cal:81,p:5.4,cb:14,f:0.4,n:{en:"Green Peas 100g",ar:"بازلاء 100g",nl:"Erwten 100g",pt:"Ervilha 100g"},i:{en:["100g green peas"],ar:["100g بازلاء"],nl:["100g erwten"],pt:["100g ervilhas"]}},
+ {id:"blackbean",e:"🫘",c:"carbs",cal:132,p:8.9,cb:24,f:0.5,n:{en:"Black Beans 100g",ar:"فاصوليا سوداء 100g",nl:"Zwarte Bonen 100g",pt:"Feijão Preto 100g"},i:{en:["100g black beans"],ar:["100g فاصوليا"],nl:["100g zwarte bonen"],pt:["100g feijão preto"]}},
+ {id:"pumpkin",e:"🎃",c:"veg",cal:26,p:1,cb:6.5,f:0.1,n:{en:"Pumpkin 100g",ar:"قرع 100g",nl:"Pompoen 100g",pt:"Abóbora 100g"},i:{en:["100g pumpkin","Olive oil","Salt"],ar:["100g قرع","زيت زيتون","ملح"],nl:["100g pompoen","Olijfolie","Zout"],pt:["100g abóbora","Azeite","Sal"]}},
+ {id:"celery",e:"🌿",c:"veg",cal:16,p:0.7,cb:3,f:0.2,n:{en:"Celery 100g",ar:"كرفس 100g",nl:"Selderij 100g",pt:"Aipo 100g"},i:{en:["100g celery"],ar:["100g كرفس"],nl:["100g selderij"],pt:["100g aipo"]}},
+ {id:"onion",e:"🧅",c:"veg",cal:40,p:1.1,cb:9.3,f:0.1,n:{en:"Onion 100g",ar:"بصل 100g",nl:"Ui 100g",pt:"Cebola 100g"},i:{en:["100g onion"],ar:["100g بصل"],nl:["100g ui"],pt:["100g cebola"]}},
+ {id:"garlic",e:"🧄",c:"veg",cal:149,p:6.4,cb:33,f:0.5,n:{en:"Garlic 10g",ar:"ثوم 10g",nl:"Knoflook 10g",pt:"Alho 10g"},i:{en:["10g garlic cloves"],ar:["10g ثوم"],nl:["10g knoflook"],pt:["10g alho"]}},
+ {id:"eggplant",e:"🍆",c:"veg",cal:25,p:1,cb:6,f:0.2,n:{en:"Eggplant 100g",ar:"باذنجان 100g",nl:"Aubergine 100g",pt:"Berinjela 100g"},i:{en:["100g eggplant","Olive oil","Salt"],ar:["100g باذنجان","زيت زيتون","ملح"],nl:["100g aubergine","Olijfolie","Zout"],pt:["100g berinjela","Azeite","Sal"]}},
 ];
 
-const mealPlansData = {
-  bulking: [
-    {key:"breakfast", items:["oats","egg","banana","milk"]},
-    {key:"preworkout", items:["bread","tuna","apple"]},
-    {key:"postworkout", items:["chicken","rice","broccoli"]},
-    {key:"lunch", items:["salmon","sweetpot","spinach"]},
-    {key:"dinner", items:["lentils","chicken","greek_yog"]},
-    {key:"presleep", items:["mozz","almonds"]},
-  ],
-  cutting: [
-    {key:"breakfast", items:["egg","spinach","greek_yog"]},
-    {key:"snack", items:["apple","almonds"]},
-    {key:"lunch", items:["chicken","broccoli","cucumber"]},
-    {key:"postworkout", items:["tuna","bread"]},
-    {key:"dinner", items:["salmon","spinach","greek_yog"]},
-  ],
-  maintenance: [
-    {key:"breakfast", items:["oats","egg","banana"]},
-    {key:"snack", items:["greek_yog","nuts"]},
-    {key:"lunch", items:["chicken","rice","spinach"]},
-    {key:"dinner", items:["lentils","bread","broccoli"]},
-  ],
-  performance: [
-    {key:"breakfast", items:["oats","egg","banana","milk"]},
-    {key:"preworkout", items:["banana","bread"]},
-    {key:"postworkout", items:["chicken","rice","apple"]},
-    {key:"lunch", items:["salmon","sweetpot","broccoli"]},
-    {key:"dinner", items:["lentils","chicken","rice"]},
-    {key:"presleep", items:["greek_yog","almonds"]},
-  ],
+// ── RECIPES ───────────────────────────────────────────────
+const REC=[
+ {id:"r1",cats:["bulk","postworkout"],e:"🍗🍚",n:{en:"Power Chicken Bowl",ar:"وعاء دجاج القوة",nl:"Kracht Kippenbowl",pt:"Bowl de Frango Power"},t:"25 min",cal:520,p:48,cb:56,f:8,
+  ings:[{id:"chicken",q:200},{id:"brownrice",q:100},{id:"broccoli",q:80},{id:"olive_oil",q:1}],
+  s:{en:["Season chicken with salt, pepper, garlic powder","Grill chicken 6-7 min per side","Cook brown rice per package","Steam broccoli 4 min","Assemble bowl and drizzle oil"],
+     ar:["تبّل الدجاج بالملح والفلفل","شوّه 6-7 دقيقة كل جانب","اطبخ الأرز حسب التعليمات","بخّر البروكلي 4 دقائق","رتّب الوعاء وأضف الزيت"],
+     nl:["Kruid kip met zout en peper","Gril kip 6-7 min per kant","Kook rijst","Stoom broccoli 4 min","Maak bowl klaar"],
+     pt:["Tempere frango","Grelhe 6-7 min por lado","Cozinhe arroz","Cozinhe brócolis no vapor","Monte o bowl"]}},
+ {id:"r2",cats:["bulk","breakfast"],e:"🥣",n:{en:"Athlete Oat Bowl",ar:"وعاء شوفان الرياضي",nl:"Atleet Havermoutbowl",pt:"Bowl de Aveia do Atleta"},t:"10 min",cal:450,p:25,cb:65,f:10,
+  ings:[{id:"oats",q:80},{id:"milk",q:200},{id:"banana",q:1},{id:"peanutbutter",q:30},{id:"whey",q:1}],
+  s:{en:["Cook oats with milk 3-4 min","Stir in whey protein","Top with sliced banana","Add peanut butter"],
+     ar:["اطبخ الشوفان بالحليب 3-4 دقائق","أضف واي بروتين","ضع شرائح الموز","أضف زبدة الفول السوداني"],
+     nl:["Kook havermout met melk 3-4 min","Roer wei-proteïne erdoor","Top met banaan","Voeg pindakaas toe"],
+     pt:["Cozinhe aveia com leite 3-4 min","Misture com whey","Coloque banana","Adicione pasta amendoim"]}},
+ {id:"r3",cats:["cut","postworkout"],e:"🥗",n:{en:"Lean Salmon Salad",ar:"سلطة سلمون خفيفة",nl:"Magere Zalmsalade",pt:"Salada de Salmão Magra"},t:"15 min",cal:340,p:38,cb:8,f:17,
+  ings:[{id:"salmon",q:150},{id:"spinach",q:80},{id:"cucumber",q:100},{id:"tomato",q:100},{id:"olive_oil",q:1}],
+  s:{en:["Grill salmon 4 min per side","Rest 2 min, flake","Toss greens","Top with salmon","Drizzle olive oil and lemon"],
+     ar:["شوّه السلمون 4 دقيقة كل جانب","اتركه يرتاح ثم فتّته","اخلط الخضار","ضع السلمون فوقه","أضف زيت الزيتون والليمون"],
+     nl:["Gril zalm 4 min per kant","Laat rusten, maak flokken","Meng groenten","Top met zalm","Drizzle olijfolie"],
+     pt:["Grelhe salmão 4 min por lado","Deixe descansar, desfie","Misture vegetais","Coloque salmão","Regue com azeite"]}},
+ {id:"r4",cats:["bulk","breakfast"],e:"🥞",n:{en:"Egg & Oat Pancakes",ar:"بانكيك البيض والشوفان",nl:"Ei & Havermoutpannenkoekjes",pt:"Panquecas de Ovo e Aveia"},t:"15 min",cal:380,p:28,cb:42,f:10,
+  ings:[{id:"oats",q:60},{id:"egg",q:3},{id:"banana",q:1},{id:"milk",q:50}],
+  s:{en:["Blend oats, eggs, banana, milk","Heat non-stick pan","Pour small rounds, cook 2-3 min each side","Serve with berries"],
+     ar:["اخلط الشوفان والبيض والموز والحليب","سخّن مقلاة","اسكب دوائر صغيرة وشوّه 2-3 دقائق كل جانب","قدّم مع توت"],
+     nl:["Mix havermout, eieren, banaan, melk","Verwarm pan","Bak kleine rondes 2-3 min per kant","Serveer met bessen"],
+     pt:["Misture tudo no liquidificador","Aqueça frigideira","Frite discos 2-3 min por lado","Sirva com frutas"]}},
+ {id:"r5",cats:["cut"],e:"🍤🥦",n:{en:"Shrimp Stir-Fry",ar:"روبيان مقلي",nl:"Roergebakken Garnalen",pt:"Camarão ao Wok"},t:"20 min",cal:280,p:32,cb:18,f:8,
+  ings:[{id:"shrimp",q:150},{id:"broccoli",q:100},{id:"bellpep",q:80},{id:"mushroom",q:80},{id:"olive_oil",q:1}],
+  s:{en:["Heat wok with oil","Add garlic 1 min","Stir-fry veggies 3-4 min","Add shrimp 2-3 min","Season with soy sauce"],
+     ar:["سخّن الوك بالزيت","أضف الثوم دقيقة","قلّب الخضار 3-4 دقائق","أضف الروبيان 2-3 دقائق","تبّل بصلصة الصويا"],
+     nl:["Verhit wok met olie","Voeg knoflook toe 1 min","Roerbak groenten 3-4 min","Voeg garnalen toe 2-3 min","Breng op smaak"],
+     pt:["Aqueça wok com azeite","Frite alho 1 min","Refogue legumes 3-4 min","Adicione camarão 2-3 min","Tempere"]}},
+];
+
+const PLANS={
+ bulking:[{k:"breakfast",ids:["oats","egg","banana","milk"]},{k:"preworkout",ids:["bread","tuna","apple"]},{k:"postworkout",ids:["chicken","rice","broccoli"]},{k:"lunch",ids:["salmon","sweetpot","spinach"]},{k:"dinner",ids:["lentils","chicken","greek_yog"]},{k:"presleep",ids:["mozz","almonds"]}],
+ cutting:[{k:"breakfast",ids:["egg","spinach","greek_yog"]},{k:"snack",ids:["apple","almonds"]},{k:"lunch",ids:["chicken","broccoli","cucumber"]},{k:"postworkout",ids:["tuna","bread"]},{k:"dinner",ids:["salmon","spinach","greek_yog"]}],
+ maintenance:[{k:"breakfast",ids:["oats","egg","banana"]},{k:"snack",ids:["greek_yog","nuts"]},{k:"lunch",ids:["chicken","rice","spinach"]},{k:"dinner",ids:["lentils","bread","broccoli"]}],
+ performance:[{k:"breakfast",ids:["oats","egg","banana","milk"]},{k:"preworkout",ids:["banana","bread","honey"]},{k:"postworkout",ids:["whey","rice","apple"]},{k:"lunch",ids:["salmon","sweetpot","broccoli"]},{k:"dinner",ids:["lentils","chicken","rice"]},{k:"presleep",ids:["greek_yog","almonds"]}],
 };
 
-// ===================== STATE =====================
-let lang = 'ar';
-let currentGoal = 'bulking';
-let macros = null;
-let eaten = [];
-
-// ===================== LANG =====================
-function setLang(l) {
-  lang = l;
-  localStorage.setItem('lang', l);
-  const isRTL = l === 'ar';
-  document.documentElement.lang = l;
-  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-  document.querySelectorAll('.rtl, .ltr').forEach(el => {
-    el.classList.toggle('rtl', isRTL);
-    el.classList.toggle('ltr', !isRTL);
-  });
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.includes(l === 'ar' ? 'عربي' : l === 'en' ? 'English' : l === 'nl' ? 'Nederlands' : 'Português')));
-  applyTranslations();
-  renderFoodList(document.getElementById('search-input').value);
-  renderPlan();
-  updateProgress();
-}
-
-function t(key) { return T[lang][key] || T['en'][key] || key; }
-
-function applyTranslations() {
-  document.getElementById('subtitle').textContent = t('subtitle');
-  document.getElementById('ios-steps').innerHTML = t('iosSteps');
-  document.querySelectorAll('[data-i]').forEach(el => {
-    const key = el.dataset.i;
-    if (T[lang][key]) el.textContent = T[lang][key];
-  });
-  // Select options
-  document.querySelector('#gender option[value="male"]').textContent = t('male');
-  document.querySelector('#gender option[value="female"]').textContent = t('female');
-  const actVals = ['1.2','1.375','1.55','1.725','1.9'];
-  const actKeys = ['act1','act2','act3','act4','act5'];
-  actVals.forEach((v,i) => {
-    const opt = document.querySelector(`#activity option[value="${v}"]`);
-    if (opt) opt.textContent = t(actKeys[i]);
-  });
-  document.getElementById('search-input').placeholder = t('search');
-  // update tips
-  renderTips();
-}
-
-function renderTips() {
-  document.getElementById('tips-list').innerHTML = T[lang].tips_list.map(tip => `
-    <div class="tip-row"><span class="tip-icon">${tip.slice(0,2)}</span><span class="tip-text">${tip.slice(2).trim()}</span></div>
-  `).join('');
-}
-
-// ===================== UI =====================
-function switchTab(id, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(tb => tb.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  btn.classList.add('active');
-}
-
-function selectGoal(btn) {
-  document.querySelectorAll('.goal-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  currentGoal = btn.dataset.goal;
-}
-
-// ===================== CALCULATOR =====================
-const goals = {
-  bulking:     {mult:1.15,pr:2.2,cr:5,  fr:1  },
-  cutting:     {mult:0.85,pr:2.5,cr:2,  fr:0.8},
-  maintenance: {mult:1.0, pr:1.8,cr:3.5,fr:1  },
-  performance: {mult:1.1, pr:2.0,cr:6,  fr:1.2},
+const PAYPAL={
+ weekly:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=REPLACE_WEEKLY_PLAN_ID',
+ monthly:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=REPLACE_MONTHLY_PLAN_ID',
+ yearly:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=REPLACE_YEARLY_PLAN_ID',
 };
 
-function calculate() {
-  const age = +document.getElementById('age').value;
-  const weight = +document.getElementById('weight').value;
-  const height = +document.getElementById('height').value;
-  const gender = document.getElementById('gender').value;
-  const activity = +document.getElementById('activity').value;
-  if (!age||!weight||!height) { alert(lang==='ar'?'الرجاء إدخال جميع البيانات':'Please fill all fields'); return; }
-  const bmr = gender==='male' ? 10*weight+6.25*height-5*age+5 : 10*weight+6.25*height-5*age-161;
-  const tdee = Math.round(bmr*activity);
-  const g = goals[currentGoal];
-  macros = { calories:Math.round(tdee*g.mult), protein:Math.round(weight*g.pr), carbs:Math.round(weight*g.cr), fat:Math.round(weight*g.fr) };
-  document.getElementById('r-tdee').textContent = tdee;
-  document.getElementById('r-target').textContent = macros.calories;
-  document.getElementById('r-protein').textContent = macros.protein;
-  document.getElementById('r-carbs').textContent = macros.carbs;
-  document.getElementById('r-fat').textContent = macros.fat;
-  document.getElementById('results').style.display = 'block';
+// ── STATE ─────────────────────────────────────────────────
+let lang='en',goal='bulking',macros=null,eaten=[],isPro=false,selPlanId=null,bIngs=[],savedMeals=[],fCat='all',rCat='all';
+
+// ── LANG ──────────────────────────────────────────────────
+function t(k){return TR[lang][k]||TR.en[k]||k;}
+function fn(food){return food.n?food.n[lang]||food.n.en:'';}
+
+function setLang(l){
+  lang=l; localStorage.setItem('lang',l);
+  const rtl=l==='ar';
+  document.documentElement.lang=l; document.documentElement.dir=rtl?'rtl':'ltr';
+  document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',b.textContent.trim().startsWith(l==='ar'?'🇸🇦':l==='en'?'🇬🇧':l==='nl'?'🇳🇱':'🇧🇷')));
+  // apply text
+  const ids=['sub','t0','t1','t2','t3','t4','t5','lPersonal','lAge','lWeight','lHeight','lGender','oMale','oFemale','lAct','oA1','oA2','oA3','oA4','oA5','lGoal','gBulk','gCut','gMaint','gPerf','calcBtn','lTarget','lProg','tRemLbl','lToday','lAdd','lPlan','lTips','lProFeat','lRecDesc','lUnlock','lProFeat2','lBldDesc','lUnlock2','lRecipes','lBuilder','lMealName','lSelIngs','lSave','lSaved','lGoPro','lProDesc','f1','f1s','f2','f2s','f3','f3s','f4','f4s','pW','pWu','pWo','pWs','pWf1','pWf2','pM','pMu','pMo','pMs','pMpop','pMf1','pMf2','pY','pYu','pYo','pYs','pYf1','pYf2','ppLbl','lPayPal','lSecure','lProOn'];
+  ids.forEach(id=>{const el=document.getElementById(id);if(el&&TR[lang][id])el.textContent=TR[lang][id];});
+  document.getElementById('planGoal').textContent=t('planGoal');
+  document.getElementById('fsearch').placeholder=t('catAll');
+  document.getElementById('bSearch').placeholder=t('catAll');
+  document.getElementById('iosSteps').innerHTML=t('iosSteps');
+  renderCats(); renderFL(); renderBFL(); renderPlan(); renderTips(); renderRec(); renderBld();
+  updateProg(); renderTracker();
+}
+
+// ── TABS ──────────────────────────────────────────────────
+function goTab(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on'); btn.classList.add('on');
+}
+
+// ── CALC ──────────────────────────────────────────────────
+const GOALS={bulking:{m:1.15,pr:2.2,cr:5,fr:1},cutting:{m:.85,pr:2.5,cr:2,fr:.8},maintenance:{m:1,pr:1.8,cr:3.5,fr:1},performance:{m:1.1,pr:2,cr:6,fr:1.2}};
+function selGoal(btn){document.querySelectorAll('.gbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');goal=btn.dataset.goal;}
+function calculate(){
+  const a=+document.getElementById('age').value,w=+document.getElementById('weight').value,h=+document.getElementById('height').value;
+  const g=document.getElementById('gender').value,ac=+document.getElementById('activity').value;
+  if(!a||!w||!h){alert(lang==='ar'?'الرجاء إدخال جميع البيانات':'Please fill all fields');return;}
+  const bmr=g==='male'?10*w+6.25*h-5*a+5:10*w+6.25*h-5*a-161;
+  const tdee=Math.round(bmr*ac),gd=GOALS[goal];
+  macros={cal:Math.round(tdee*gd.m),p:Math.round(w*gd.pr),c:Math.round(w*gd.cr),f:Math.round(w*gd.fr)};
+  document.getElementById('rTDEE').textContent=tdee;
+  document.getElementById('rTarget').textContent=macros.cal;
+  document.getElementById('rProt').textContent=macros.p;
+  document.getElementById('rCarb').textContent=macros.c;
+  document.getElementById('rFat').textContent=macros.f;
+  document.getElementById('results').style.display='block';
   document.getElementById('results').scrollIntoView({behavior:'smooth'});
-  renderPlan();
-  updateProgress();
-  localStorage.setItem('macros', JSON.stringify(macros));
-  localStorage.setItem('goal', currentGoal);
+  renderPlan(); updateProg();
+  localStorage.setItem('macros',JSON.stringify(macros));
+  localStorage.setItem('goal',goal);
 }
 
-// ===================== PLAN =====================
-function renderPlan() {
-  const plan = mealPlansData[currentGoal];
-  const mealNames = T[lang].mealNames;
-  const goalNames = T[lang].goalNames;
-  const lbl = document.getElementById('plan-goal-label');
-  lbl.textContent = t('goalPrefix') + ' ' + (goalNames[currentGoal] || '');
-  document.getElementById('meal-plan').innerHTML = plan.map(m => {
-    const mName = mealNames[m.key] || m.key;
-    const items = m.items.map(id => {
-      const f = foodsData.find(x => x.id===id);
-      return f ? `<div class="meal-item"><span class="meal-dot">●</span>${f.names[lang]||f.names.en}</div>` : '';
-    }).join('');
-    return `<div class="meal-card"><div class="meal-title">${mName}</div>${items}</div>`;
-  }).join('');
-  renderTips();
+// ── TRACKER ───────────────────────────────────────────────
+function renderCats(){
+  const cats=[['all','catAll'],['protein','catProt'],['carbs','catCarb'],['fat','catFat'],['veg','catVeg'],['dairy','catDai'],['fruit','catFru'],['supps','catSup']];
+  document.getElementById('catPills').innerHTML=cats.map(([c,k])=>`<button class="cp${fCat===c?' on':''}" onclick="setFC('${c}')">${t(k)}</button>`).join('');
 }
-
-// ===================== TRACKER =====================
-function getFoodName(food) { return food.names ? (food.names[lang]||food.names.en) : food.name; }
-
-function renderFoodList(filter='') {
-  const list = document.getElementById('food-list');
-  const filtered = foodsData.filter(f => {
-    const name = f.names[lang]||f.names.en;
-    return !filter || name.toLowerCase().includes(filter.toLowerCase());
-  });
-  list.innerHTML = filtered.map(f => {
-    const name = f.names[lang]||f.names.en;
-    const cal = t('calorie');
-    return `<div class="food-item" onclick="addFood('${f.id}')">
-      <span class="food-emoji">${f.e}</span>
-      <div class="food-info">
-        <div class="food-name">${name}</div>
-        <div class="food-macros">${f.cal} ${cal} • ${f.p}g P • ${f.c}g C • ${f.f}g F</div>
-      </div>
-      <button class="add-btn">${t('addBtn')}</button>
-    </div>`;
-  }).join('');
+function setFC(c){fCat=c;renderCats();renderFL();}
+function renderFL(q=''){
+  const list=document.getElementById('foodList');
+  const fil=F.filter(f=>{const nm=fn(f).toLowerCase();return(fCat==='all'||f.c===fCat)&&(!q||nm.includes(q.toLowerCase()));});
+  list.innerHTML=fil.map(f=>`<div class="fi" onclick="addF('${f.id}')"><span style="font-size:18px">${f.e}</span><div style="flex:1;min-width:0"><div class="fn">${fn(f)}</div><div class="fm">${f.cal} kcal • ${f.p}g P • ${f.cb}g C • ${f.f}g F</div></div><button class="addb">+</button></div>`).join('');
 }
-
-function filterFoods(val) { renderFoodList(val); }
-
-function addFood(id) {
-  const food = foodsData.find(f=>f.id===id);
-  if(!food) return;
-  const ex = eaten.find(f=>f.id===id);
-  if(ex) ex.qty+=1; else eaten.push({...food,qty:1});
-  renderTracker(); updateProgress(); saveEaten();
-}
-
-function changeQty(id,delta) {
-  const f = eaten.find(f=>f.id===id);
-  if(!f) return;
-  f.qty = Math.round((f.qty+delta)*2)/2;
-  if(f.qty<=0) eaten = eaten.filter(x=>x.id!==id);
-  renderTracker(); updateProgress(); saveEaten();
-}
-
-function removeFood(id) {
-  eaten = eaten.filter(f=>f.id!==id);
-  renderTracker(); updateProgress(); saveEaten();
-}
-
-function renderTracker() {
-  const list = document.getElementById('tracker-items');
-  const card = document.getElementById('eaten-list');
+function filterF(v){renderFL(v);}
+function addF(id){const f=F.find(x=>x.id===id);if(!f)return;const ex=eaten.find(x=>x.id===id);if(ex)ex.qty+=1;else eaten.push({...f,qty:1});renderTracker();updateProg();save();}
+function chQty(id,d){const f=eaten.find(x=>x.id===id);if(!f)return;f.qty=Math.round((f.qty+d)*2)/2;if(f.qty<=0)eaten=eaten.filter(x=>x.id!==id);renderTracker();updateProg();save();}
+function remF(id){eaten=eaten.filter(x=>x.id!==id);renderTracker();updateProg();save();}
+function renderTracker(){
+  const card=document.getElementById('eatenCard');
   if(!eaten.length){card.style.display='none';return;}
   card.style.display='block';
-  const cal = t('calorie');
-  list.innerHTML = eaten.map(f=>`
-    <div class="tracker-item">
-      <span style="font-size:20px">${f.e}</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:700">${getFoodName(f)}</div>
-        <div style="font-size:10px;color:var(--muted)">${Math.round(f.cal*f.qty)} ${cal} • ${Math.round(f.p*f.qty)}p • ${Math.round(f.c*f.qty)}c • ${Math.round(f.f*f.qty)}f</div>
-      </div>
-      <div class="qty-controls">
-        <button class="qty-btn" onclick="changeQty('${f.id}',-0.5)">−</button>
-        <span class="qty-num">${f.qty}</span>
-        <button class="qty-btn plus" onclick="changeQty('${f.id}',0.5)">+</button>
-        <button class="qty-btn del" onclick="removeFood('${f.id}')">✕</button>
-      </div>
-    </div>`).join('');
+  document.getElementById('trackItems').innerHTML=eaten.map(f=>`<div class="ti"><span style="font-size:18px">${f.e}</span><div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:700">${fn(f)}</div><div style="font-size:9px;color:var(--mu)">${Math.round(f.cal*f.qty)} kcal</div></div><div class="qc"><button class="qb" onclick="chQty('${f.id}',-0.5)">−</button><span style="font-size:12px;min-width:20px;text-align:center">${f.qty}</span><button class="qb p" onclick="chQty('${f.id}',0.5)">+</button><button class="qb d" onclick="remF('${f.id}')">✕</button></div></div>`).join('');
 }
-
-function updateProgress() {
-  const card = document.getElementById('progress-card');
+function updateProg(){
+  const card=document.getElementById('progCard');
   if(!macros){card.style.display='none';return;}
   card.style.display='block';
-  const tot = eaten.reduce((a,f)=>({cal:a.cal+f.cal*f.qty,p:a.p+f.p*f.qty,c:a.c+f.c*f.qty,fat:a.fat+f.f*f.qty}),{cal:0,p:0,c:0,fat:0});
-  const cal = t('calorie');
-  document.getElementById('t-eaten').textContent = Math.round(tot.cal);
-  document.getElementById('t-label').textContent = `${cal} / ${macros.calories}`;
-  const rem = macros.calories - Math.round(tot.cal);
-  document.getElementById('t-remain').textContent = Math.abs(rem);
-  document.getElementById('t-remain-label').textContent = rem>=0 ? t('remaining') : t('exceeded');
-  document.getElementById('t-remain-box').className = 'stat-box '+(rem>=0?'green':'red');
-  const bars = [
-    {label:t('protein'),val:tot.p,max:macros.protein,color:'#ef4444'},
-    {label:t('carbs'),  val:tot.c,max:macros.carbs,  color:'#f59e0b'},
-    {label:t('fat'),    val:tot.fat,max:macros.fat,  color:'#a78bfa'},
-  ];
-  document.getElementById('macro-bars').innerHTML = bars.map(b=>{
-    const pct=Math.min(100,Math.round(b.val/(b.max||1)*100));
-    return `<div class="macro-bar">
-      <div class="macro-row"><span>${b.label}</span><span>${Math.round(b.val)}g / ${b.max}g (${pct}%)</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${b.color}"></div></div>
-    </div>`;
-  }).join('');
+  const tot=eaten.reduce((a,f)=>({cal:a.cal+f.cal*f.qty,p:a.p+f.p*f.qty,c:a.c+f.cb*f.qty,fat:a.fat+f.f*f.qty}),{cal:0,p:0,c:0,fat:0});
+  document.getElementById('tEaten').textContent=Math.round(tot.cal);
+  document.getElementById('tLbl').textContent=`kcal / ${macros.cal}`;
+  const rem=macros.cal-Math.round(tot.cal);
+  document.getElementById('tRem').textContent=Math.abs(rem);
+  document.getElementById('tRemLbl').textContent=rem>=0?t('tRemLbl'):t('tExc');
+  document.getElementById('tRemBox').className='sb2 '+(rem>=0?'grn':'rd2');
+  const bars=[{l:'Protein',v:tot.p,m:macros.p,c:'#ef4444'},{l:'Carbs',v:tot.c,m:macros.c,c:'#f59e0b'},{l:'Fat',v:tot.fat,m:macros.f,c:'#a78bfa'}];
+  document.getElementById('mBars').innerHTML=bars.map(b=>{const pct=Math.min(100,Math.round(b.v/(b.m||1)*100));return`<div class="mbar"><div class="mrow"><span>${b.l}</span><span>${Math.round(b.v)}g/${b.m}g (${pct}%)</span></div><div class="btr"><div class="bfi" style="width:${pct}%;background:${b.c}"></div></div></div>`;}).join('');
 }
 
-// ===================== STORAGE =====================
-function saveEaten(){localStorage.setItem('eaten',JSON.stringify(eaten));}
+// ── PLAN ──────────────────────────────────────────────────
+function renderPlan(){
+  const plan=PLANS[goal];const mn=t('mN');const gn=t('gN');
+  document.getElementById('planGoal').textContent=t('gPfx')+' '+(gn[goal]||'');
+  document.getElementById('mealPlan').innerHTML=plan.map(m=>`<div class="mc2"><div class="mt2">${mn[m.k]||m.k}</div>${m.ids.map(id=>{const f=F.find(x=>x.id===id);return f?`<div style="display:flex;align-items:center;gap:5px;padding:2px 0;font-size:11px;color:#94a3b8"><span style="color:var(--ac);font-size:8px">●</span>${fn(f)}</div>`:''}).join('')}</div>`).join('');
+}
+function renderTips(){document.getElementById('tipsList').innerHTML=t('tips').map(tip=>`<div class="trow"><span style="font-size:18px;flex-shrink:0">${tip.slice(0,2)}</span><span style="font-size:11px;color:#94a3b8;line-height:1.5">${tip.slice(2).trim()}</span></div>`).join('');}
+
+// ── RECIPES ───────────────────────────────────────────────
+function renderRec(){
+  if(!isPro){document.getElementById('recLocked').style.display='block';document.getElementById('recContent').style.display='none';return;}
+  document.getElementById('recLocked').style.display='none';document.getElementById('recContent').style.display='block';
+  const rcats=[['all','rAll'],['bulk','rBulk'],['cut','rCut'],['breakfast','rBreak'],['postworkout','rPost']];
+  document.getElementById('recCats').innerHTML=rcats.map(([c,k])=>`<button class="cp${rCat===c?' on':''}" onclick="setRC('${c}')">${t(k)}</button>`).join('');
+  const fil=REC.filter(r=>rCat==='all'||r.cats.includes(rCat));
+  document.getElementById('recList').innerHTML=fil.map(r=>`<div class="rc" onclick="togRec('${r.id}')"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:22px">${r.e}</span><div style="flex:1"><div class="rtit">${r.n[lang]||r.n.en}</div><div class="rmeta"><span>⏱ ${r.t}</span><span>🔥 ${r.cal} kcal</span><span>💪 ${r.p}g</span></div></div><span style="color:var(--mu);font-size:11px">▼</span></div><div class="rdet" id="rd-${r.id}"><div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:var(--mu);margin-bottom:5px">${t('ing')}:</div>${r.ings.map(ing=>{const f=F.find(x=>x.id===ing.id);return f?`<div class="ir"><span style="font-size:15px">${f.e}</span><span style="flex:1">${fn(f)}</span><span style="color:var(--mu)">${ing.q}g</span></div>`:''}).join('')}</div><div><div style="font-size:10px;font-weight:700;color:var(--mu);margin-bottom:5px">${t('steps')}:</div>${(r.s[lang]||r.s.en).map((s,i)=>`<div style="font-size:11px;color:#94a3b8;padding:4px 0;border-bottom:1px solid rgba(30,58,95,.4)">${i+1}. ${s}</div>`).join('')}</div><div class="s3" style="margin-top:10px"><div class="sb2 blue"><div class="sn" style="font-size:16px">${r.cal}</div><div class="sl">kcal</div></div><div class="sb2 rd2"><div class="sn" style="font-size:16px">${r.p}g</div><div class="sl">Protein</div></div><div class="sb2 yel"><div class="sn" style="font-size:16px">${r.cb}g</div><div class="sl">Carbs</div></div></div></div></div>`).join('');
+}
+function setRC(c){rCat=c;renderRec();}
+function togRec(id){document.getElementById('rd-'+id).classList.toggle('show');}
+
+// ── BUILDER ───────────────────────────────────────────────
+function renderBld(){
+  if(!isPro){document.getElementById('bldLocked').style.display='block';document.getElementById('bldContent').style.display='none';return;}
+  document.getElementById('bldLocked').style.display='none';document.getElementById('bldContent').style.display='block';
+  renderBFL();renderSaved();
+}
+function renderBFL(q=''){
+  const fil=F.filter(f=>!q||fn(f).toLowerCase().includes(q.toLowerCase()));
+  document.getElementById('bFoodList').innerHTML=fil.slice(0,25).map(f=>`<div class="fi" onclick="addB('${f.id}')"><span style="font-size:18px">${f.e}</span><div style="flex:1;min-width:0"><div class="fn">${fn(f)}</div><div class="fm">${f.cal} kcal</div></div><button class="addb">+</button></div>`).join('');
+}
+function filterB(v){renderBFL(v);}
+function addB(id){const f=F.find(x=>x.id===id);if(!f)return;const ex=bIngs.find(x=>x.id===id);if(ex)ex.qty+=1;else bIngs.push({...f,qty:1});renderChips();renderBTotals();}
+function remB(id){bIngs=bIngs.filter(x=>x.id!==id);renderChips();renderBTotals();}
+function renderChips(){document.getElementById('bChips').innerHTML=bIngs.map(f=>`<span class="chip">${f.e} ${fn(f)} ×${f.qty}<button class="rm" onclick="remB('${f.id}')">×</button></span>`).join('');}
+function renderBTotals(){
+  if(!bIngs.length){document.getElementById('bTotals').style.display='none';return;}
+  const tot=bIngs.reduce((a,f)=>({cal:a.cal+f.cal*f.qty,p:a.p+f.p*f.qty,c:a.c+f.cb*f.qty}),{cal:0,p:0,c:0});
+  document.getElementById('bTotals').style.display='block';
+  document.getElementById('bCal').textContent=Math.round(tot.cal);
+  document.getElementById('bProt').textContent=Math.round(tot.p);
+  document.getElementById('bCarb').textContent=Math.round(tot.c);
+}
+function saveMeal(){
+  if(!bIngs.length)return;
+  const name=document.getElementById('bName').value||'Meal '+(savedMeals.length+1);
+  const tot=bIngs.reduce((a,f)=>({cal:a.cal+f.cal*f.qty,p:a.p+f.p*f.qty,c:a.c+f.cb*f.qty}),{cal:0,p:0,c:0});
+  savedMeals.push({name,ings:[...bIngs],tot});bIngs=[];
+  document.getElementById('bName').value='';
+  renderChips();renderBTotals();renderSaved();
+  localStorage.setItem('savedMeals',JSON.stringify(savedMeals));
+}
+function renderSaved(){
+  const card=document.getElementById('savedCard');
+  if(!savedMeals.length){card.style.display='none';return;}
+  card.style.display='block';
+  document.getElementById('savedList').innerHTML=savedMeals.map(m=>`<div class="mc2" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><div style="font-size:13px;font-weight:800">${m.name}</div><span style="font-size:10px;color:var(--mu)">${Math.round(m.tot.cal)} kcal</span></div><div style="font-size:10px;color:#94a3b8">${m.ings.map(f=>fn(f)).join(', ')}</div></div>`).join('');
+}
+
+// ── PRICING ───────────────────────────────────────────────
+function selPlan(id,el){
+  selPlanId=id;
+  document.querySelectorAll('.plcard').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');
+  const lbl={weekly:`€5 / week`,monthly:`€13 / month`,yearly:`€100 / year`};
+  document.getElementById('ppLbl').textContent=lbl[id];
+  document.getElementById('ppBtn').disabled=false;
+}
+function payPal(){
+  if(!selPlanId)return;
+  window.open(PAYPAL[selPlanId],'_blank');
+  setTimeout(()=>{if(confirm('Did you complete payment? (Test activation)'))actPro(selPlanId);},2000);
+}
+function actPro(plan){
+  isPro=true;
+  const days={weekly:7,monthly:30,yearly:365};
+  const exp=new Date(Date.now()+(days[plan]||30)*86400000);
+  localStorage.setItem('isPro','true');localStorage.setItem('proExp',exp.toISOString());
+  document.getElementById('proActive').style.display='block';
+  document.getElementById('planCards').style.display='none';
+  document.getElementById('ppLbl').closest('.ppbox').style.display='none';
+  document.getElementById('proExp').textContent=`Active until ${exp.toLocaleDateString()}`;
+  renderRec();renderBld();
+}
+function checkPro(){
+  if(localStorage.getItem('isPro')==='true'){
+    const exp=localStorage.getItem('proExp');
+    if(exp&&new Date(exp)>new Date()){
+      isPro=true;
+      document.getElementById('proActive').style.display='block';
+      document.getElementById('planCards').style.display='none';
+      document.getElementById('proExp').textContent=`Active until ${new Date(exp).toLocaleDateString()}`;
+      try{document.getElementById('ppLbl').closest('.ppbox').style.display='none';}catch(e){}
+    }
+  }
+}
+
+// ── STORAGE & INIT ────────────────────────────────────────
+function save(){localStorage.setItem('eaten',JSON.stringify(eaten));}
 function loadState(){
-  try {
-    const l=localStorage.getItem('lang'); if(l) lang=l;
-    const m=localStorage.getItem('macros'); if(m){macros=JSON.parse(m);document.getElementById('r-target').textContent=macros.calories;document.getElementById('r-protein').textContent=macros.protein;document.getElementById('r-carbs').textContent=macros.carbs;document.getElementById('r-fat').textContent=macros.fat;document.getElementById('results').style.display='block';}
-    const g=localStorage.getItem('goal'); if(g){currentGoal=g;document.querySelectorAll('.goal-btn').forEach(b=>b.classList.toggle('selected',b.dataset.goal===g));}
-    const e=localStorage.getItem('eaten'); if(e){eaten=JSON.parse(e);renderTracker();updateProgress();}
-  } catch(err){}
+  try{
+    const l=localStorage.getItem('lang');if(l)lang=l;
+    const m=localStorage.getItem('macros');if(m){macros=JSON.parse(m);document.getElementById('rTarget').textContent=macros.cal;document.getElementById('rProt').textContent=macros.p;document.getElementById('rCarb').textContent=macros.c;document.getElementById('rFat').textContent=macros.f;document.getElementById('results').style.display='block';}
+    const g=localStorage.getItem('goal');if(g){goal=g;document.querySelectorAll('.gbtn').forEach(b=>b.classList.toggle('on',b.dataset.goal===g));}
+    const e=localStorage.getItem('eaten');if(e)eaten=JSON.parse(e);
+    const sm=localStorage.getItem('savedMeals');if(sm)savedMeals=JSON.parse(sm);
+  }catch(e){}
 }
 
-// ===================== PWA =====================
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault(); deferredPrompt=e;
-  setTimeout(()=>{document.getElementById('install-banner').style.display='block';},3000);
-});
-document.getElementById('install-btn')?.addEventListener('click',async()=>{
-  if(!deferredPrompt)return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;
-  document.getElementById('install-banner').style.display='none';
-});
+// PWA
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
 const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
-if(isIOS&&!isStandalone) setTimeout(()=>{document.getElementById('ios-hint').style.display='block';},4000);
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+if(isIOS&&!isStandalone)setTimeout(()=>{document.getElementById('iosHint').style.display='block';},5000);
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
-// ===================== INIT =====================
-loadState();
-setLang(lang);
-renderFoodList();
-renderPlan();
+loadState();checkPro();setLang(lang);
 </script>
 </body>
 </html>
